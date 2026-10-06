@@ -74,3 +74,9 @@ FASES FUTURAS (detalle al arrancar cada una):
   y MenuScene salen de game.js. MainScene conserva solo create/
   update de orquestacion + fin de nivel. Boot→Menu→Main.
 ----------------------------------------------------------------
+[F1-P7] 2026-10-06 — Cierre Fase 1: verificacion integral
+  10/10 archivos con node --check OK. Bundle concatenado en
+  orden de index.html sin duplicados ni errores. Tests Coni y
+  Nivel 1 GREEN, mapa 46 solidos/7 vanos, 12/12 mixins OK.
+  game.js: 1025 → 335 lineas. FASE 1 COMPLETA.
+----------------------------------------------------------------
