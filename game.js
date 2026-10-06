@@ -224,6 +224,7 @@ class MainScene extends Phaser.Scene {
     v.glass.setFillStyle(v.abierta ? 0x9be8ff : 0x2b3a55);
     v.frame.setFillStyle(v.abierta ? 0x7a5a3a : 0x4a3320);
     if (v.label) v.label.setText(v.abierta ? 'Ventana: Abierta' : 'Ventana: Cerrada');
+    this.tweens.add({ targets: v.glass, alpha: 0.3, duration: 120, yoyo: true }); // parpadeo
     GameAudio.playSFX('ventana');
   }
 
@@ -279,6 +280,8 @@ class MainScene extends Phaser.Scene {
     this.coni.setVelocity(0, 0);
     if (this.enjambre) this.enjambre.congelar();
     GameAudio.playSFX('derrota');
+    this.cameras.main.flash(250, 180, 30, 30); // destello rojo
+    this.cameras.main.shake(250, 0.006);
     const msg = motivo === 'vida' ? '¡Jazmín se quedó sin vida!' : '¡Coni se volvió incontrolable!';
     this.endOverlay('DERROTA', '#ff6b6b', msg);
     this.bigButton(480, 380, '🔄 REINTENTAR NIVEL', () => this.scene.restart({ nivel: this.nivel }));

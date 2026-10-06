@@ -67,6 +67,10 @@ MainScene.prototype.updateJazminMove = function (vx, vy) {
   // Orden Y para sensación de volumen 2.5D
   p.setDepth(p.y);
   this.shadow.setPosition(p.x, p.y + 22);
+  if ((vx !== 0 || vy !== 0) && Math.random() < 0.06) { // polvillo al correr
+    const s = this.add.circle(p.x - this.facing.x * 10, p.y + 18, 3, 0xffffff, 0.35).setDepth(p.y - 1);
+    this.tweens.add({ targets: s, alpha: 0, scale: 1.8, duration: 350, onComplete: () => s.destroy() });
+  }
 };
 
 /* Devuelve el pickup cercano (para handleX). */
@@ -111,6 +115,7 @@ MainScene.prototype.pickup = function (it) {
   it.carried = true;
   this.hands = it;
   if (it.view.body) it.view.body.enable = false; // no estorba mientras se lleva
+  this.tweens.add({ targets: it.view, scale: 1.35, duration: 110, yoyo: true }); // pop
   GameAudio.playSFX('agarre');
 };
 
@@ -157,6 +162,7 @@ MainScene.prototype.hurtJazmin = function (now, n) {
   this.player.setTintFill(0xff4d4d);
   this.tweens.add({ targets: this.player, alpha: 0.25, duration: 80, yoyo: true, repeat: 3,
     onComplete: () => { this.player.setAlpha(1); this.player.clearTint(); } });
+  this.cameras.main.shake(130, 0.004); // sacudida de cámara
   GameAudio.playSFX('dano');
   this.refreshHUD();
 };

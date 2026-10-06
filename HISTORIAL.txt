@@ -33,7 +33,8 @@ FASES FUTURAS (detalle al arrancar cada una):
   G0 .... Direccion de arte + espec PNG. [COMPLETA]
   G1 .... Personajes 4-dir + sombras blandas. [COMPLETA]
   G2 .... Tiles y muebles Kenney sin tocar colisiones. [COMPLETA]
-  G3 .... FX, luz y micro-animaciones. [EN CURSO]
+  G3 .... FX, luz y micro-animaciones. [COMPLETA]
+  G4 .... UI/HUD/menú polish. [EN CURSO]
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -166,4 +167,9 @@ FASES FUTURAS (detalle al arrancar cada una):
   piso_pasto y piso_ceramica cableados (los 4 pisos aceptan PNG
   o fallback). wall3D con zocalo sur, puerta() con dintel.
   Mapa 46/7 intacto: cero cambios de colisiones.
+----------------------------------------------------------------
+[G3] 2026-10-06 — Micro-animaciones y feedback
+  Pop al agarrar, shake de camara al daño, polvillo al correr,
+  parpadeo del vidrio al togglear ventana, flash+shake en
+  derrota. Sin particulas pesadas: todo tweens livianos.
 ----------------------------------------------------------------
