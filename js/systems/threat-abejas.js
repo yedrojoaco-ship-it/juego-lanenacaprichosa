@@ -22,7 +22,13 @@ class ThreatAbejas extends Threat {
     if (this.vivas() >= this.max) return;
     const v = this.scene.ventana;
     const b = this.group.create(v.x, v.y + 30, 'abeja');
-    b.setDepth(400).setCircle(7);
+    b.setDepth(400);
+    // Escala y cuerpo según textura real (sheet grande o fallback chico)
+    b.baseS = b.width > 64 ? SHEET.abeja.s : 1;
+    b.setScale(b.baseS);
+    if (b.baseS === 1) b.setCircle(7);
+    else b.setCircle(36, 47, 50);
+    if (this.scene.anims.exists('abeja-volar')) b.anims.play('abeja-volar');
     b.t = Math.random() * 6;
     b.setVelocity(Phaser.Math.Between(-40, 40), 60);
   }
@@ -77,7 +83,7 @@ class ThreatAbejas extends Threat {
       const wob = Math.sin(b.t * 7) * 45;
       b.setVelocity(dx / d * sp + px * wob, dy / d * sp + py * wob);
       b.setDepth(b.y);
-      b.setScale(1 + Math.sin(b.t * 20) * 0.12); // aleteo
+      b.setScale(b.baseS * (1 + Math.sin(b.t * 20) * 0.12)); // aleteo
       if (Phaser.Math.Distance.Between(b.x, b.y, scene.player.x, scene.player.y) < 26 && now > scene.danoCD) {
         scene.hurtJazmin(now);
       }

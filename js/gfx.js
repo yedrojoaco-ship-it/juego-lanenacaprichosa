@@ -89,7 +89,16 @@ function makeFloorPatterns(scene) {
 }
 
 function floorTextured(scene, x, y, w, h, tex, borde) {
-  scene.add.tileSprite(x, y, w, h, tex).setDepth(-2);
+  // Fotos grandes (1408px) van por image+cover: el tileSprite interno
+  // de Phaser corrompe texturas grandes al duplicarlas en canvas.
+  // Patrones chicos (64px) siguen por tileSprite (repiten perfecto).
+  const t = scene.textures.get(tex);
+  const src = t && t.source[0];
+  if (src && Math.max(src.width, src.height) > 256) {
+    scene.add.image(x, y, tex).setDisplaySize(w, h).setDepth(-2);
+  } else {
+    scene.add.tileSprite(x, y, w, h, tex).setDepth(-2);
+  }
   scene.add.rectangle(x, y, w, h).setFillStyle(0xffffff, 0)
     .setStrokeStyle(4, borde, 0.8).setDepth(-1.5);
 }
@@ -103,6 +112,14 @@ function solid(scene, group, x, y, w, h) {
 
 /* Iconos de inventario compartidos (HUD + prompts) */
 const ICONS = { raqueta: '🎾', chocolate: '🍫', peluche: '🧸', extintor: '🧯', mopa: '🧹', flotador: '🛟' };
+
+/* Escalas de sheets normalizados (gen/). Si un PNG falta y se usa el
+ * fallback chico, el spawn usa escala 1 (ver spawnJazmin/spawnConi). */
+const SHEET = {
+  jazmin: { s: 0.33, body: [50, 20], off: [30, 146] },
+  coni: { s: 0.30, body: [46, 20], off: [36, 146] },
+  abeja: { s: 0.15 },
+};
 
 /* Sombra blanda bajo pies: núcleo + halo. Misma API que un GameObject
  * para setPosition/setDepth, así el update no cambia. */

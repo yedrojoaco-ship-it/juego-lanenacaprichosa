@@ -38,6 +38,8 @@ FASES FUTURAS (detalle al arrancar cada una):
   G5 .... Auditoria peso + QA + cierre. [COMPLETA]
 
   (G0-G5: mejora grafica integral cerrada.)
+
+  ASSETS REALES (A-codes: integra PNG/MP3 del usuario + packs Kenney):
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -186,4 +188,21 @@ FASES FUTURAS (detalle al arrancar cada una):
   logs SFX solo con window.__DEBUG. QA integral: 7 tests
   GREEN + bundle + mapa + mixins + pickups. TODOs restantes =
   solo stubs MP3 documentados. Fases G0-G5 COMPLETAS.
+----------------------------------------------------------------
+[A1] 2026-10-06 — Sprites reales: sheets normalizados + escalas
+  tools/pngutils.js + tools/normaliza.js (detecta grilla 6x4,
+  limpia halos, recentra, pies abajo). gen/jazmin|coni|abeja
+  _sheet.png + gen/raqueta_clean.png (chroma magenta). Loader,
+  anims 6/dir, escalas y bodies adaptativos (SHEET + fallback).
+  Objetos a 32px via addPickup. Verificado con screenshots.
+----------------------------------------------------------------
+[FIX-depth] 2026-10-06 — Pasto base tapaba pisos y losa
+  El tile/image exterior iba en depth 0 sobre pisos (-2) y
+  losa (-1.8): todo bajo el pasto. Ahora depth -3. Detectado
+  por screenshot en navegador (todo verde).
+----------------------------------------------------------------
+[FIX-jpg] 2026-10-06 — TileSprite corrompe fotos grandes
+  El tileTexture interno de Phaser duplica la fuente en canvas
+  y con JPGs 1408px sale verde. Fotos por image+cover,
+  patrones chicos siguen por tileSprite. Pisos .png→.jpg reales.
 ----------------------------------------------------------------

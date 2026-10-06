@@ -9,8 +9,15 @@ window.__mixins.push(function (MainScene) {
 MainScene.prototype.spawnConi = function () {
   // ---- Coni NPC (dormida en su cama, barra 0-100) ----
   this.coni = this.physics.add.sprite(...MANSION.spawn.coni, 'coni').setDepth(301);
-  this.coni.body.setSize(18, 10);
-  this.coni.body.setOffset(6, 32);
+  this.coniBase = this.textures.get('coni').getSourceImage().width > 64 ? SHEET.coni.s : 1;
+  this.coni.setScale(this.coniBase);
+  if (this.coniBase === 1) {
+    this.coni.body.setSize(18, 10);
+    this.coni.body.setOffset(6, 32);
+  } else {
+    this.coni.body.setSize(...SHEET.coni.body);
+    this.coni.body.setOffset(...SHEET.coni.off);
+  }
   this.coniShadow = softShadow(this, MANSION.spawn.coni[0], MANSION.spawn.coni[1] + 22, 24);
   this.coniShadow.setDepth(300);
   this.physics.add.collider(this.coni, this.walls);

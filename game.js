@@ -14,9 +14,9 @@ class MainScene extends Phaser.Scene {
   }  create() {
     SDK.gameplayStart();
     const fr0 = this.textures.get('jazmin');
-    this.jazSprite = !!(fr0 && fr0.frameTotal >= 16 && this.anims.exists('jaz-abajo'));
+    this.jazSprite = !!(fr0 && fr0.frameTotal >= 24 && this.anims.exists('jaz-abajo'));
     const fr1 = this.textures.get('coni');
-    this.coniSprite = !!(fr1 && fr1.frameTotal >= 16 && this.anims.exists('con-abajo'));
+    this.coniSprite = !!(fr1 && fr1.frameTotal >= 24 && this.anims.exists('con-abajo'));
     makeFloorPatterns(this);
     const texMadera = this.textures.exists('piso_madera') ? 'piso_madera' : 'pat-madera';
     const texAzulejo = this.textures.exists('piso_azulejo') ? 'piso_azulejo' : 'pat-azulejo';
@@ -26,8 +26,8 @@ class MainScene extends Phaser.Scene {
     const WORLD_W = MANSION.W, WORLD_H = MANSION.H;
     this.physics.world.setBounds(0, 0, WORLD_W, WORLD_H);
 
-    // Pasto exterior texturizado
-    this.add.tileSprite(WORLD_W / 2, WORLD_H / 2, WORLD_W, WORLD_H, texPasto);
+    // Pasto exterior (cover: las fotos grandes no van por tileSprite)
+    this.add.image(WORLD_W / 2, WORLD_H / 2, texPasto).setDisplaySize(WORLD_W, WORLD_H).setDepth(-3);
 
     // Losa de la mansión (x40..920, y40..640)
     this.add.rectangle(480, 340, 900, 620, 0xd9b48f).setStrokeStyle(6, 0x7a5a3a).setDepth(-1.8);
@@ -91,7 +91,7 @@ class MainScene extends Phaser.Scene {
 
     // Patio: piscina de cerámica (borde tileado + agua + brillo)
     dropShadow(this, 480, 730, 300, 0);
-    this.add.tileSprite(480, 730, 308, 118, texCeramica).setDepth(1);
+    this.add.image(480, 730, texCeramica).setDisplaySize(308, 118).setDepth(1);
     const pool = this.add.rectangle(480, 730, 308, 118, 0xffffff, 0)
       .setStrokeStyle(8, 0xffffff, 1).setDepth(1.4);
     this.add.rectangle(480, 730, 278, 92, 0x2fa8dd).setDepth(1.1);
@@ -103,34 +103,26 @@ class MainScene extends Phaser.Scene {
       this.add.rectangle(fx, 810, 12, 22, 0x6a4a2a).setDepth(56);
     }
 
-    // ---- Raqueta (Hab 1, sobre el estante) ----
+    // ---- Pickups (escala auto: PNG grande → 32px, fallback queda igual) ----
     this.pickups = [];
-    const raqView = this.physics.add.sprite(...MANSION.spawn.raqueta, 'raqueta').setDepth(200);
-    this.pickups.push({ id: 'raqueta', label: 'Raqueta', view: raqView, carried: false });
+    const addPickup = (id, label, x, y, key, depth) => {
+      const v = this.physics.add.sprite(x, y, key).setDepth(depth || 200);
+      if (v.width > 64) v.setScale(32 / Math.max(v.width, v.height));
+      this.pickups.push({ id, label, view: v, carried: false });
+      return v;
+    };
+    addPickup('raqueta', 'Raqueta', ...MANSION.spawn.raqueta, 'raqueta');
     // Chocolates en la heladera (stock 3, GDD) + peluche en lo de Coni
     const chocoKey = this.textures.exists('chocolate') ? 'chocolate' : 'choco';
-    for (const pos of MANSION.spawn.chocos) {
-      const v = this.physics.add.sprite(pos[0], pos[1], chocoKey).setDepth(800);
-      this.pickups.push({ id: 'chocolate', label: 'Chocolate', view: v, carried: false });
-    }
+    for (const pos of MANSION.spawn.chocos) addPickup('chocolate', 'Chocolate', pos[0], pos[1], chocoKey, 800);
     const pelKey = this.textures.exists('peluche') ? 'peluche' : 'coni';
-    const pelView = this.physics.add.sprite(...MANSION.spawn.peluche, pelKey).setDepth(200).setTint(0xffc0cb);
-    this.pickups.push({ id: 'peluche', label: 'Peluche', view: pelView, carried: false });
+    addPickup('peluche', 'Peluche', ...MANSION.spawn.peluche, pelKey).setTint(0xffc0cb);
     // Extintor en el lavadero (solo Nivel 2)
-    if (this.nivel >= 2) {
-      const extView = this.physics.add.sprite(...MANSION.spawn.extintor, 'extintor').setDepth(200);
-      this.pickups.push({ id: 'extintor', label: 'Extintor', view: extView, carried: false });
-    }
+    if (this.nivel >= 2) addPickup('extintor', 'Extintor', ...MANSION.spawn.extintor, 'extintor');
     // Mopa en el lavadero (solo Nivel 3)
-    if (this.nivel >= 3) {
-      const mopView = this.physics.add.sprite(...MANSION.spawn.mopa, 'mopa').setDepth(200);
-      this.pickups.push({ id: 'mopa', label: 'Mopa', view: mopView, carried: false });
-    }
+    if (this.nivel >= 3) addPickup('mopa', 'Mopa', ...MANSION.spawn.mopa, 'mopa');
     // Flotador en el patio (solo Nivel 5)
-    if (this.nivel >= 5) {
-      const floView = this.physics.add.sprite(...MANSION.spawn.flotador, 'flotador').setDepth(200);
-      this.pickups.push({ id: 'flotador', label: 'Flotador', view: floView, carried: false });
-    }
+    if (this.nivel >= 5) addPickup('flotador', 'Flotador', ...MANSION.spawn.flotador, 'flotador');
 
     // ---- Ventana de Coni (muro norte, marco visible, inicia Abierta) ----
     this.ventana = { x: MANSION.ventana.x, y: MANSION.ventana.y, abierta: true, frame: null, glass: null };
@@ -433,4 +425,4 @@ const config = {
   scene: [BootScene, MenuScene, MainScene]
 };
 
-new Phaser.Game(config);
+window.__game = new Phaser.Game(config); // handle debug (consola: __game)

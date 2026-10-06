@@ -25,11 +25,11 @@ OBJETOS (imagen simple, centrados):
 - extintor.png  → 32x44 rojo.  mopa.png → 28x40.  flotador.png → 30x30.
 - peluche.png   → 30x30 osito (si falta: fallback coni rosado).
 
-PISOS (64x64 tileable, se repiten con tileSprite, ya cableados):
-- piso_madera.png   → parquet cálido (habs + living + pasillo).
-- piso_azulejo.png  → azulejo claro (cocina + lavadero).
-- piso_pasto.png    → pasto exterior + patio.
-- piso_ceramica.png → cerámica de la piscina.
+PISOS (JPG fotográficos 1408x768, se muestran enteros por ambiente):
+- piso_madera.jpg   → parquet cálido (habs + living + pasillo).
+- piso_azulejo.jpg  → azulejo claro (cocina + lavadero).
+- piso_pasto.jpg    → pasto exterior + patio.
+- piso_ceramica.jpg → cerámica de la piscina.
 
 CÓMO PROBAR UN PNG: soltarlo en assets/images/, recargar con servidor
 local (http://localhost:8000). Por consola sale "[Assets] falta: <key>"

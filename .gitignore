@@ -1,3 +1,7 @@
 # Regenerable / pesado: no se versiona
 .opencode/vendor/
 **/node_modules/
+# Packs fuente (Kenney): solo se versiona lo copiado a assets/
+kenney_ui-pack/
+kenney_interface-sounds/
+kenney_generic-items/

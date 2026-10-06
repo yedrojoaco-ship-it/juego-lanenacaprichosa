@@ -10,8 +10,16 @@ MainScene.prototype.spawnJazmin = function () {
   // ---- Protagonista: Jazmín (hitbox en los pies → camina por detrás) ----
   this.player = this.physics.add.sprite(...MANSION.spawn.jugador, 'jazmin');
   this.player.setCollideWorldBounds(true).setDepth(600);
-  this.player.body.setSize(20, 12);   // bounding box pequeño abajo
-  this.player.body.setOffset(6, 36);
+  // Escala y hitbox según textura real (sheet grande o fallback chico)
+  this.jazBase = this.textures.get('jazmin').getSourceImage().width > 64 ? SHEET.jazmin.s : 1;
+  this.player.setScale(this.jazBase);
+  if (this.jazBase === 1) {
+    this.player.body.setSize(20, 12);   // bounding box pequeño abajo
+    this.player.body.setOffset(6, 36);
+  } else {
+    this.player.body.setSize(...SHEET.jazmin.body);
+    this.player.body.setOffset(...SHEET.jazmin.off);
+  }
   // Sombra blanda bajo los pies (sigue al jugador)
   this.shadow = softShadow(this, ...MANSION.spawn.jugador, 26);
   this.shadow.setDepth(599);
@@ -49,7 +57,7 @@ MainScene.prototype.updateJazminMove = function (vx, vy) {
       const k = ax > ay ? (vx < 0 ? 'jaz-izq' : 'jaz-der')
         : (vy < 0 ? 'jaz-arriba' : 'jaz-abajo');
       if (p.anims.getName() !== k || !p.anims.isPlaying) p.anims.play(k, true);
-      p.setFlipX(false); p.setScale(1);
+      p.setFlipX(false); p.setScale(this.jazBase);
     } else {
       p.anims.stop(); p.setTexture('jazmin', 0);
     }
@@ -57,12 +65,12 @@ MainScene.prototype.updateJazminMove = function (vx, vy) {
   } else {
     if (vx < 0) p.setFlipX(true);
     if (vx > 0) p.setFlipX(false);
-    if (vx !== 0 || vy !== 0) {
-      p.setScale(1 + Math.sin(this.time.now / 120) * 0.03);
-      if (Math.floor(this.time.now / 280) % 2 === 0) GameAudio.playPaso();
-    } else {
-      p.setScale(1);
-    }
+      if (vx !== 0 || vy !== 0) {
+        p.setScale(this.jazBase * (1 + Math.sin(this.time.now / 120) * 0.03));
+        if (Math.floor(this.time.now / 280) % 2 === 0) GameAudio.playPaso();
+      } else {
+        p.setScale(this.jazBase);
+      }
   }
   // Orden Y para sensación de volumen 2.5D
   p.setDepth(p.y);
@@ -115,7 +123,7 @@ MainScene.prototype.pickup = function (it) {
   it.carried = true;
   this.hands = it;
   if (it.view.body) it.view.body.enable = false; // no estorba mientras se lleva
-  this.tweens.add({ targets: it.view, scale: 1.35, duration: 110, yoyo: true }); // pop
+  this.tweens.add({ targets: it.view, scale: it.view.scaleX * 1.35, duration: 110, yoyo: true }); // pop
   GameAudio.playSFX('agarre');
 };
 
@@ -149,7 +157,7 @@ MainScene.prototype.swing = function () {
   this.tweens.add({ targets: this.hitbox, alpha: 0, scale: 1.4, duration: 160,
     onComplete: () => this.hitbox && this.hitbox.destroy() });
   // Sacudida cartoon de Jazmín
-  this.tweens.add({ targets: p, scale: 1.18, duration: 80, yoyo: true });
+  this.tweens.add({ targets: p, scale: this.jazBase * 1.18, duration: 80, yoyo: true });
   GameAudio.playSFX('raquetazo');
   this.threats.recibirImpacto(hx, hy, 62);
 };

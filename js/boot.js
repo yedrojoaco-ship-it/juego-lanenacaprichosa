@@ -10,19 +10,19 @@ class BootScene extends Phaser.Scene {
     // Sprites opcionales en /assets/images/ (ver assets/images/LEEME.txt).
     // Si un PNG falta, el loader falla en silencio y se usa el fallback
     // dibujado por código en ensureFallbackTextures(): el juego nunca se rompe.
-    this.load.spritesheet('jazmin', 'assets/images/jazmin.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('coni', 'assets/images/coni.png', { frameWidth: 30, frameHeight: 42 });
-    this.load.image('raqueta', 'assets/images/raqueta.png');
+    this.load.spritesheet('jazmin', 'assets/images/gen/jazmin_sheet.png', { frameWidth: 109, frameHeight: 172 });
+    this.load.spritesheet('coni', 'assets/images/gen/coni_sheet.png', { frameWidth: 118, frameHeight: 172 });
+    this.load.image('raqueta', 'assets/images/gen/raqueta_clean.png');
     this.load.image('chocolate', 'assets/images/chocolate.png');
     this.load.image('peluche', 'assets/images/peluche.png');
-    this.load.image('abeja', 'assets/images/abeja.png');
+    this.load.spritesheet('abeja', 'assets/images/gen/abeja_sheet.png', { frameWidth: 167, frameHeight: 172 });
     this.load.image('extintor', 'assets/images/extintor.png');
     this.load.image('mopa', 'assets/images/mopa.png');
     this.load.image('flotador', 'assets/images/flotador.png');
-    this.load.image('piso_madera', 'assets/images/piso_madera.png');
-    this.load.image('piso_azulejo', 'assets/images/piso_azulejo.png');
-    this.load.image('piso_pasto', 'assets/images/piso_pasto.png');
-    this.load.image('piso_ceramica', 'assets/images/piso_ceramica.png');
+    this.load.image('piso_madera', 'assets/images/piso_madera.jpg');
+    this.load.image('piso_azulejo', 'assets/images/piso_azulejo.jpg');
+    this.load.image('piso_pasto', 'assets/images/piso_pasto.jpg');
+    this.load.image('piso_ceramica', 'assets/images/piso_ceramica.jpg');
     this.load.on('loaderror', (f) => console.warn('[Assets] falta:', f.key, '→ fallback por código'));
   }
 
@@ -30,6 +30,7 @@ class BootScene extends Phaser.Scene {
     this.ensureFallbackTextures();
     this.setupCharAnims('jazmin', 'jaz');
     this.setupCharAnims('coni', 'con');
+    this.setupCharAnims('abeja', 'ab');
     makeFloorPatterns(this);
     this.scene.start('Menu');
   }
@@ -142,17 +143,22 @@ class BootScene extends Phaser.Scene {
     g.destroy();
   }
 
-  /* Anims 4 direcciones si el PNG es spritesheet 4x4 (16 frames).
+  /* Anims 4 direcciones si el PNG es sheet 6x4 (24 frames).
    * Con fallback de 1 frame no hace nada: el juego sigue igual. */
   setupCharAnims(key, prefix) {
     try {
       const fr = this.textures.get(key);
-      if (fr && fr.frameTotal >= 16 && !this.anims.exists(prefix + '-abajo')) {
+      if (fr && fr.frameTotal >= 24 && !this.anims.exists(prefix + '-abajo')) {
         const mk = (k, s) => this.anims.create({ key: k,
-          frames: this.anims.generateFrameNumbers(key, { start: s, end: s + 3 }),
-          frameRate: 9, repeat: -1 });
-        mk(prefix + '-abajo', 0); mk(prefix + '-izq', 4);
-        mk(prefix + '-der', 8); mk(prefix + '-arriba', 12);
+          frames: this.anims.generateFrameNumbers(key, { start: s, end: s + 5 }),
+          frameRate: 10, repeat: -1 });
+        mk(prefix + '-abajo', 0); mk(prefix + '-izq', 6);
+        mk(prefix + '-der', 12); mk(prefix + '-arriba', 18);
+      }
+      if (key === 'abeja' && fr && fr.frameTotal >= 6 && !this.anims.exists('abeja-volar')) {
+        this.anims.create({ key: 'abeja-volar',
+          frames: this.anims.generateFrameNumbers('abeja', { start: 0, end: 5 }),
+          frameRate: 12, repeat: -1 });
       }
     } catch (e) { /* sin spritesheet: fallback estático */ }
   }
