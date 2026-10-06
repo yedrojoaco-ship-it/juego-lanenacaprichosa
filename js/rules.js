@@ -21,6 +21,10 @@ function fuegoTick(v, dt, f) {
   const baja = f.uso ? 34 : 0;
   return clamp100(v + rise - baja);
 }
+/* ---- Agua Nivel 3: sube con canilla abierta, baja al cerrarla ---- */
+function aguaTick(v, dt, f) {
+  return clamp100(v + (f.abierta ? 4 * dt : -2 * dt));
+}
 /* ---- Reglas de fin de nivel (puras, testeables) ----
  * La victoria es genérica: amenazas resueltas + Coni calma.
  * (ThreatSystem.todasResueltas() + coniBar < 50 en el update.)

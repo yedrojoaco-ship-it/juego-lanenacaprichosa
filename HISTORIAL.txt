@@ -25,7 +25,8 @@ FASE 1 — Refactor modular (scripts clasicos, sin ES modules):
 FASES FUTURAS (detalle al arrancar cada una):
   F2 .... Sistema de eventos reutilizable (ThreatSystem). [COMPLETA]
   F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador). [COMPLETA]
-  F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma). [EN CURSO]
+  F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma). [COMPLETA]
+  F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones). [EN CURSO]
   F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma).
   F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones).
   F6 .... Niveles 4-5 + selector de niveles + SDK CrazyGames.
@@ -123,4 +124,11 @@ FASES FUTURAS (detalle al arrancar cada una):
   Main recibe {nivel}, restart conserva nivel, victoria
   generica (todasResueltas + bar<50). checkVictoria eliminado
   (dead code). SFX extintor/alarma listos.
+----------------------------------------------------------------
+[F5] 2026-10-06 — Nivel 3: Inundacion del Baño (TDD: test antes)
+  ThreatAgua (canilla abierta + nivel 0-100 + hasta 6 charcos)
+  sobre ThreatSystem. Mopa en lavadero (Espacio limpia charco
+  cercano, -10 nivel). Resbalon -10 + deslizamiento. Bañera con
+  colision solo en Nivel 3 (N1/N2 intactos). Menu con 3 niveles,
+  victoria generica reutilizada. SFX agua/resbalon listos.
 ----------------------------------------------------------------

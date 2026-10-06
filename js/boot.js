@@ -17,6 +17,7 @@ class BootScene extends Phaser.Scene {
     this.load.image('peluche', 'assets/images/peluche.png');
     this.load.image('abeja', 'assets/images/abeja.png');
     this.load.image('extintor', 'assets/images/extintor.png');
+    this.load.image('mopa', 'assets/images/mopa.png');
     this.load.image('piso_madera', 'assets/images/piso_madera.png');
     this.load.image('piso_azulejo', 'assets/images/piso_azulejo.png');
     this.load.on('loaderror', (f) => console.warn('[Assets] falta:', f.key, '→ fallback por código'));
@@ -117,6 +118,14 @@ class BootScene extends Phaser.Scene {
       g.lineStyle(3, 0x222222, 1); g.lineBetween(16, 10, 26, 22);    // manguera
       g.fillStyle(0xdddddd, 1); g.fillRect(5, 22, 22, 6);           // etiqueta
       g.generateTexture('extintor', 32, 44);
+    }
+    if (T('mopa')) { // palo + cabezal de hilos
+      g.clear();
+      g.fillStyle(0x9a6a3a, 1); g.fillRect(12, 2, 4, 22);              // palo
+      g.fillStyle(0xd8cfb8, 1); g.fillTriangle(14, 22, 4, 38, 24, 38); // cabezal
+      g.lineStyle(1.5, 0x9a9a8a, 1);
+      g.lineBetween(14, 24, 8, 38); g.lineBetween(14, 24, 20, 38); g.lineBetween(14, 24, 14, 38);
+      g.generateTexture('mopa', 28, 40);
     }
     g.destroy();
   }

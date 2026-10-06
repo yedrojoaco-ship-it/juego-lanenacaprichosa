@@ -27,32 +27,24 @@ class MenuScene extends Phaser.Scene {
       fontFamily: 'Trebuchet MS', fontSize: '20px', color: '#cfc3ff'
     }).setOrigin(0.5);
 
-    const btn = this.add.rectangle(width / 2, height / 2 + 40, 260, 62, 0x6c4dff)
-      .setStrokeStyle(4, 0xffffff).setInteractive({ useHandCursor: true });
-    this.add.text(width / 2, height / 2 + 40, '▶  JUGAR · NIVEL 1', {
-      fontFamily: 'Trebuchet MS', fontSize: '28px', color: '#ffffff', fontStyle: 'bold'
-    }).setOrigin(0.5);
+    const mkBtn = (dy, color, hover, label, size, nivel) => {
+      const b = this.add.rectangle(width / 2, height / 2 + dy, 280, 58, color)
+        .setStrokeStyle(4, 0xffffff).setInteractive({ useHandCursor: true });
+      this.add.text(width / 2, height / 2 + dy, label, {
+        fontFamily: 'Trebuchet MS', fontSize: size + 'px', color: '#ffffff', fontStyle: 'bold'
+      }).setOrigin(0.5);
+      b.on('pointerover', () => b.setFillStyle(hover));
+      b.on('pointerout', () => b.setFillStyle(color));
+      b.on('pointerdown', () => {
+        this.cameras.main.fadeOut(250);
+        this.time.delayedCall(260, () => this.scene.start('Main', { nivel }));
+      });
+    };
+    mkBtn(25, 0x6c4dff, 0x8a6fff, '▶  NIVEL 1 · ABEJAS', 24, 1);
+    mkBtn(95, 0xd94f2e, 0xf06a3e, '🔥  NIVEL 2 · COCINA', 24, 2);
+    mkBtn(165, 0x2e9ac9, 0x4ebae9, '💧  NIVEL 3 · BAÑO', 24, 3);
 
-    const btn2 = this.add.rectangle(width / 2, height / 2 + 115, 260, 62, 0xd94f2e)
-      .setStrokeStyle(4, 0xffffff).setInteractive({ useHandCursor: true });
-    this.add.text(width / 2, height / 2 + 115, '🔥  NIVEL 2 · COCINA', {
-      fontFamily: 'Trebuchet MS', fontSize: '24px', color: '#ffffff', fontStyle: 'bold'
-    }).setOrigin(0.5);
-
-    btn.on('pointerover', () => btn.setFillStyle(0x8a6fff));
-    btn.on('pointerout', () => btn.setFillStyle(0x6c4dff));
-    btn.on('pointerdown', () => {
-      this.cameras.main.fadeOut(250);
-      this.time.delayedCall(260, () => this.scene.start('Main', { nivel: 1 }));
-    });
-    btn2.on('pointerover', () => btn2.setFillStyle(0xf06a3e));
-    btn2.on('pointerout', () => btn2.setFillStyle(0xd94f2e));
-    btn2.on('pointerdown', () => {
-      this.cameras.main.fadeOut(250);
-      this.time.delayedCall(260, () => this.scene.start('Main', { nivel: 2 }));
-    });
-
-    this.add.text(width / 2, height / 2 + 185,
+    this.add.text(width / 2, height / 2 + 230,
       'Flechas mover · X: agarrar/soltar · Espacio: usar · E: TV', {
       fontFamily: 'Trebuchet MS', fontSize: '15px', color: '#9d8cff'
     }).setOrigin(0.5);

@@ -116,6 +116,11 @@ class MainScene extends Phaser.Scene {
       const extView = this.physics.add.sprite(...MANSION.spawn.extintor, 'extintor').setDepth(200);
       this.pickups.push({ id: 'extintor', label: 'Extintor', view: extView, carried: false });
     }
+    // Mopa en el lavadero (solo Nivel 3)
+    if (this.nivel >= 3) {
+      const mopView = this.physics.add.sprite(...MANSION.spawn.mopa, 'mopa').setDepth(200);
+      this.pickups.push({ id: 'mopa', label: 'Mopa', view: mopView, carried: false });
+    }
 
     // ---- Ventana de Coni (muro norte, marco visible, inicia Abierta) ----
     this.ventana = { x: MANSION.ventana.x, y: MANSION.ventana.y, abierta: true, frame: null, glass: null };
@@ -155,8 +160,10 @@ class MainScene extends Phaser.Scene {
     this.threats = new ThreatSystem(this);
     this.enjambre = null;
     this.fuego = null;
+    this.agua = null;
     if (this.nivel === 1) this.enjambre = this.threats.registrar(new ThreatAbejas(this));
-    else this.fuego = this.threats.registrar(new ThreatFuego(this));
+    else if (this.nivel === 2) this.fuego = this.threats.registrar(new ThreatFuego(this));
+    else this.agua = this.threats.registrar(new ThreatAgua(this));
 
     // Cámara cercana en Jazmín + viñeta CSS en bordes + fade
     this.cameras.main.setBounds(0, 0, WORLD_W, WORLD_H);
@@ -280,10 +287,10 @@ class MainScene extends Phaser.Scene {
     }
     this.bigButton(330, 420, '🔄 REPETIR', () => this.scene.restart({ nivel: this.nivel }));
     this.bigButton(640, 420, '➡ SIGUIENTE NIVEL', () => {
-      if (this.nivel < 2) {
+      if (this.nivel < 3) {
         this.scene.start('Main', { nivel: this.nivel + 1 });
-      } else { // Nivel 3 aún no existe: aviso visible, el overlay sigue ahí
-        const t = this.add.text(480, 480, 'Nivel 3 próximamente…', {
+      } else { // Nivel 4 aún no existe: aviso visible, el overlay sigue ahí
+        const t = this.add.text(480, 480, 'Nivel 4 próximamente…', {
           fontFamily: 'Trebuchet MS', fontSize: '18px', color: '#ffe45e' })
           .setOrigin(0.5).setScrollFactor(0).setDepth(1002);
         this.tweens.add({ targets: t, alpha: 0, delay: 1200, duration: 500, onComplete: () => t.destroy() });
@@ -331,7 +338,9 @@ class MainScene extends Phaser.Scene {
       if (donaCalma) this.feedChocolate();
       else if (this.hands && this.hands.id === 'raqueta') this.swing();
       else if (this.hands && this.hands.id === 'extintor' && this.fuego && this.fuego.usarExtintor()) { /* apagando */ }
+      else if (this.hands && this.hands.id === 'mopa' && this.agua && this.agua.limpiarCercano()) { /* limpiando */ }
       else if (this.fuego && this.fuego.silenciarAlarma()) { /* alarma off */ }
+      else if (this.agua && this.agua.cerrarCanilla()) { /* canilla off */ }
       else if (nv) this.toggleVentana();
     }
 
@@ -348,6 +357,9 @@ class MainScene extends Phaser.Scene {
       }
       if (!this.notiFlags.fuego && this.fuego && this.fuego.intensidad > 0) {
         this.notiFlags.fuego = true; this.notify('¡Fuego en la cocina! 🔥');
+      }
+      if (!this.notiFlags.agua && this.agua && this.agua.canilla && this.agua.nivel > 20) {
+        this.notiFlags.agua = true; this.notify('¡Se inunda el baño! 💧');
       }
       if (!this.notiFlags.coni && this.coniBar > 70) {
         this.notiFlags.coni = true; this.notify('¡Coni está incontrolable! 🍫');

@@ -98,7 +98,7 @@ function solid(scene, group, x, y, w, h) {
 }
 
 /* Iconos de inventario compartidos (HUD + prompts) */
-const ICONS = { raqueta: '🎾', chocolate: '🍫', peluche: '🧸', extintor: '🧯' };
+const ICONS = { raqueta: '🎾', chocolate: '🍫', peluche: '🧸', extintor: '🧯', mopa: '🧹' };
 
 function roomLabel(scene, x, y, text) {  return scene.add.text(x, y, text, {
     fontFamily: 'Trebuchet MS', fontSize: '22px',
