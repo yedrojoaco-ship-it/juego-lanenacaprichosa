@@ -135,7 +135,9 @@ class MainScene extends Phaser.Scene {
     this.hudHandsTxt = this.add.text(830, 30, '✋ vacías', { fontFamily: 'Trebuchet MS', fontSize: '15px', color: '#ffe45e' }).setOrigin(0.5).setScrollFactor(0).setDepth(901);
     this._handsLabel = '';
 
-    this.spawnEnjambre();
+    // Amenazas Nivel 1 (Fase 2: ThreatSystem, extensible a fuego/agua)
+    this.threats = new ThreatSystem(this);
+    this.enjambre = this.threats.registrar(new ThreatAbejas(this));
 
     // Cámara cercana en Jazmín + viñeta CSS en bordes + fade
     this.cameras.main.setBounds(0, 0, WORLD_W, WORLD_H);
@@ -212,7 +214,7 @@ class MainScene extends Phaser.Scene {
     this.fin = 'derrota';
     this.player.setVelocity(0, 0);
     this.coni.setVelocity(0, 0);
-    for (const b of this.bees.getChildren()) b.setVelocity(0, 0);
+    this.enjambre.congelar();
     GameAudio.playSFX('derrota');
     const msg = motivo === 'vida' ? '¡Jazmín se quedó sin vida!' : '¡Coni se volvió incontrolable!';
     this.endOverlay('DERROTA', '#ff6b6b', msg);
@@ -290,17 +292,17 @@ class MainScene extends Phaser.Scene {
       else if (nv) this.toggleVentana();
     }
 
-    // Coni + abejas (dt en segundos)
+    // Coni + amenazas (dt en segundos)
     const dt = Math.min((delta || 16.6) / 1000, 0.05);
     this.updateConi(dt);
-    this.updateBees(dt, time || 0);
+    this.threats.actualizar(dt, time || 0);
     this.refreshHUD();
 
     // Fin de Nivel 1
     if (!this.fin) {
       const causa = checkDerrota(this.vida, this.coniBar);
       if (causa) this.gameOver(causa);
-      else if (checkVictoria(!this.ventana.abierta, this.bees.getLength(), this.coniBar)) this.victory();
+      else if (checkVictoria(!this.ventana.abierta, this.enjambre.vivas(), this.coniBar)) this.victory();
     }
 
     // Orden Y para sensación de volumen 2.5D

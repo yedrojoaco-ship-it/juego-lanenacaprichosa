@@ -23,12 +23,8 @@ MainScene.prototype.spawnConi = function () {
 };
 
 MainScene.prototype.updateConi = function (dt) {
-  // Amenaza: abejas cerca de Coni, ventana abierta o ruido (TV)
-  let beesCerca = false;
-  for (const b of this.bees.getChildren()) {
-    if (Phaser.Math.Distance.Between(b.x, b.y, this.coni.x, this.coni.y) < 260) { beesCerca = true; break; }
-  }
-  const amenaza = beesCerca || this.ventana.abierta || GameAudio.tvOn;
+  // Amenaza: la aporta el ThreatSystem (abejas hoy, fuego/agua mañana)
+  const amenaza = this.threats.nivelAmenaza() > 0 || this.ventana.abierta || GameAudio.tvOn;
   this.coniBar = coniTick(this.coniBar, dt, { amenaza });
   const bar = this.coniBar;
 

@@ -145,7 +145,7 @@ MainScene.prototype.swing = function () {
   // Sacudida cartoon de Jazmín
   this.tweens.add({ targets: p, scale: 1.18, duration: 80, yoyo: true });
   GameAudio.playSFX('raquetazo');
-  this.killBeesAt(hx, hy, 62);
+  this.threats.recibirImpacto(hx, hy, 62);
 };
 
 /* ---- Daño a Jazmín (-15, parpadeo) ---- */
