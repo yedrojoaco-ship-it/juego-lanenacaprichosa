@@ -173,8 +173,8 @@ class MainScene extends Phaser.Scene {
     makeFloorPatterns(this);
     const texMadera = this.textures.exists('piso_madera') ? 'piso_madera' : 'pat-madera';
     const texAzulejo = this.textures.exists('piso_azulejo') ? 'piso_azulejo' : 'pat-azulejo';
-    // Mansión compacta 960x860 (pasillos estrechos, escala acogedora)
-    const WORLD_W = 960, WORLD_H = 860;
+    // Mansión compacta (datos en js/data-mansion.js)
+    const WORLD_W = MANSION.W, WORLD_H = MANSION.H;
     this.physics.world.setBounds(0, 0, WORLD_W, WORLD_H);
 
     // Pasto exterior texturizado
@@ -185,40 +185,14 @@ class MainScene extends Phaser.Scene {
 
     this.walls = this.physics.add.staticGroup();
     const W = this.walls;
-    // Muros horizontales [cx, y, w] grosor 16, con vanos de puerta ya descontados
-    const murosH = [
-      [480, 40, 880],            // norte exterior
-      [91, 300, 102], [249, 300, 102],     // Hab1 | vano x142..198
-      [366, 300, 132], [554, 300, 132],    // Coni | vano x432..488
-      [681, 300, 122], [859, 300, 122],    // Hab3 | vano x742..798
-      [96, 370, 112], [269, 370, 122],     // Cocina | vano x152..208
-      [401, 370, 142], [604, 370, 152],    // Living | vano x472..528
-      [726, 370, 92], [874, 370, 92],      // Lavadero | vano x772..828
-      [256, 640, 432], [754, 640, 332],    // sur (puerta patio x472..588)
-      [480, 810, 880],                     // cerco patio
-    ];
-    for (const [x, y, w] of murosH) { solid(this, W, x, y, w, 16); wall3D(this, x, y, w, 16, 0x8a6a4a, 0xc09a6a); }
-    // Muros verticales [x, cy, h] grosor 16
-    const murosV = [
-      [40, 425, 770], [920, 425, 770],     // exteriores (llegan al cerco)
-      [300, 170, 260], [620, 170, 260],    // tabiques cuartos
-      [330, 505, 270], [680, 505, 270],    // tabiques abajo
-    ];
-    for (const [x, y, h] of murosV) { solid(this, W, x, y, 16, h); wall3D(this, x, y, 16, h, 0x9a7650, 0xc09a6a); }
-    // Marcos de puerta visibles (paso libre por el vano)
-    puerta(this, 170, 300, 56); puerta(this, 460, 300, 56); puerta(this, 770, 300, 56);
-    puerta(this, 180, 370, 56); puerta(this, 500, 370, 56); puerta(this, 800, 370, 56);
-    puerta(this, 530, 640, 116);
+    // Muros con vanos de puerta + marcos visibles (datos en MANSION)
+    for (const [x, y, w] of MANSION.murosH) { solid(this, W, x, y, w, 16); wall3D(this, x, y, w, 16, 0x8a6a4a, 0xc09a6a); }
+    for (const [x, y, h] of MANSION.murosV) { solid(this, W, x, y, 16, h); wall3D(this, x, y, 16, h, 0x9a7650, 0xc09a6a); }
+    for (const [x, y, w] of MANSION.puertas) puerta(this, x, y, w);
 
     // ---- Pisos texturizados con bordes ----
-    floorTextured(this, 170, 172, 244, 240, texMadera, 0x7a5a3a);   // Hab 1 parquet
-    floorTextured(this, 460, 172, 312, 240, texMadera, 0x6a4a8a);   // Coni parquet
-    floorTextured(this, 770, 172, 284, 240, texMadera, 0x4a6a8a);   // Hab 3 parquet
-    floorTextured(this, 480, 335, 864, 54, texMadera, 0x8a7a5a);    // pasillo estrecho
-    floorTextured(this, 185, 505, 274, 254, texAzulejo, 0x6a8a9a);  // Cocina azulejos
-    floorTextured(this, 505, 505, 334, 254, texMadera, 0x9a5a3a);   // Living parquet
-    floorTextured(this, 800, 505, 224, 254, texAzulejo, 0x5a9aaa);  // Lavadero azulejos
-    floorTextured(this, 480, 725, 864, 154, 'pat-pasto', 0x3f7a46); // Patio pasto
+    const texPorAlias = { madera: texMadera, azulejo: texAzulejo, pasto: 'pat-pasto' };
+    for (const [x, y, w, h, tex, borde] of MANSION.pisos) floorTextured(this, x, y, w, h, texPorAlias[tex], borde);
     // Alfombra ovalada cuarto de Coni (calidez cartoon)
     this.add.ellipse(460, 220, 200, 100, 0xff9ecb, 0.85).setDepth(-1)
       .setStrokeStyle(5, 0xd94f7a, 0.9);
@@ -226,13 +200,7 @@ class MainScene extends Phaser.Scene {
     this.add.ellipse(505, 520, 230, 120, 0xc9a06a, 0.9).setDepth(-1)
       .setStrokeStyle(5, 0x8a5a2a, 0.9);
 
-    roomLabel(this, 170, 80, 'Habitación 1');
-    roomLabel(this, 460, 80, 'Cuarto de Coni 💜');
-    roomLabel(this, 770, 80, 'Habitación 3');
-    roomLabel(this, 260, 612, 'Cocina');
-    roomLabel(this, 620, 600, 'Living 📺');
-    roomLabel(this, 800, 450, 'Lavadero');
-    roomLabel(this, 480, 668, 'Patio · Piscina');
+    for (const [x, y, t] of MANSION.labels) roomLabel(this, x, y, t);
 
     // ---- Muebles (visual 2.5D + colisión) ----
     const furn = (x, y, w, h, base, top) => {
@@ -240,59 +208,37 @@ class MainScene extends Phaser.Scene {
       solid(this, W, x, y, w, h);
     };
 
-    // Cuarto de Coni: cama con respaldo, armario, caja y juguetes
-    furn(400, 190, 90, 130, 0xb678ff, 0xd3aaff);       // cama Coni
+    // Muebles con colisión (datos en MANSION.muebles) + deco a medida
+    for (const [x, y, w, h, base, top] of MANSION.muebles) furn(x, y, w, h, base, top);
+
+    // Cuarto de Coni: respaldo, manta, almohada y juguetes sobre la cama/caja
     this.add.rectangle(400, 128, 90, 14, 0x7a4ec9).setDepth(129); // respaldo
     this.add.rectangle(400, 200, 70, 44, 0xff9ecb).setDepth(191); // manta
     this.add.rectangle(400, 150, 60, 20, 0xffffff).setDepth(192); // almohada
-    furn(560, 82, 70, 36, 0x9a6a3a, 0xc08a4e);         // armario
-    furn(585, 258, 44, 36, 0x4aa3df, 0x8ac8ef);        // caja de juguetes
     this.add.circle(500, 250, 7, 0xff4d4d).setDepth(3); // juguetes (sin colisión)
     this.add.rectangle(540, 180, 12, 12, 0x63c78a).setDepth(3);
     this.add.circle(348, 262, 6, 0xffe45e).setDepth(3).setStrokeStyle(2, 0x8a6a1a);
 
-    // Hab 1: cama + estante (aquí la Raqueta)
-    furn(160, 190, 90, 120, 0x5aa9ff, 0x9cc8ff);
+    // Hab 1 y Hab 3: almohadas sobre sus camas
     this.add.rectangle(160, 150, 60, 20, 0xffffff).setDepth(191);
-    furn(110, 96, 80, 30, 0x9a6a3a, 0xc08a4e);         // estante
-    // Hab 3: cama + caja
-    furn(770, 190, 90, 120, 0x63c78a, 0xa5e6bd);
     this.add.rectangle(770, 150, 60, 20, 0xffffff).setDepth(191);
-    furn(855, 100, 44, 40, 0xc08a4e, 0xe0aa6e);
 
-    // Cocina: mesadas en L + heladera + comedor con 4 sillas
-    furn(140, 402, 190, 40, 0xb9c2cc, 0xe6ecf2);       // mesada norte
-    furn(70, 500, 44, 170, 0xb9c2cc, 0xe6ecf2);        // mesada oeste
-    furn(285, 402, 50, 70, 0xdff3ff, 0xffffff);        // heladera
-    furn(185, 545, 95, 60, 0x9a6a3a, 0xc08a4e);        // mesa comedor
-    furn(185, 498, 28, 26, 0x7a5a3a, 0xa87c4e);        // sillas
-    furn(185, 592, 28, 26, 0x7a5a3a, 0xa87c4e);
-    furn(122, 545, 28, 26, 0x7a5a3a, 0xa87c4e);
-    furn(248, 545, 28, 26, 0x7a5a3a, 0xa87c4e);
-
-    // Living: mueble TV + sofás en L + mesa ratona + plantas
+    // Living: plantas (maceta con colisión + follaje) y TV
     const planta = (x, y) => {
       furn(x, y, 30, 30, 0xa8542e, 0xc07a4e);         // maceta
       this.add.circle(x - 8, y - 18, 12, 0x3f9d4e).setDepth(y + 1);
       this.add.circle(x + 8, y - 20, 14, 0x55b75e).setDepth(y + 1.1);
       this.add.circle(x, y - 28, 10, 0x6cc478).setDepth(y + 1.2);
     };
-    furn(450, 548, 140, 45, 0xd94f4f, 0xff8a8a);       // sofá horizontal
-    furn(562, 508, 45, 110, 0xc04444, 0xff8a8a);       // sofá vertical (L)
-    furn(488, 488, 70, 40, 0x9a6a3a, 0xc08a4e);        // mesa ratona
     planta(352, 394); planta(658, 616);
     // TV (objeto especial, guardamos referencia)
-    box25D(this, 505, 402, 110, 30, 0x222233, 0x44445e);
-    solid(this, W, 505, 402, 110, 34);
-    this.tvScreen = this.add.rectangle(505, 390, 88, 24, 0x111111).setDepth(410);
-    this.tvLight = this.add.circle(505, 402, 70, 0x66ccff, 0).setDepth(409);
-    this.tvZone = this.add.zone(505, 448, 200, 140);
+    const TV = MANSION.tv;
+    box25D(this, TV.x, TV.y, 110, 30, 0x222233, 0x44445e);
+    solid(this, W, TV.x, TV.y, 110, 34);
+    this.tvScreen = this.add.rectangle(TV.x, TV.y - 12, 88, 24, 0x111111).setDepth(410);
+    this.tvLight = this.add.circle(TV.x, TV.y, 70, 0x66ccff, 0).setDepth(409);
+    this.tvZone = this.add.zone(...TV.zone, 200, 140);
     this.physics.add.existing(this.tvZone);
-
-    // Lavadero: lavarropas + pileta
-    furn(725, 420, 50, 50, 0xe6ecf2, 0xffffff);
-    furn(725, 490, 50, 50, 0xe6ecf2, 0xffffff);
-    furn(830, 580, 120, 45, 0xb9c2cc, 0xe6ecf2);       // pileta
 
     // Patio: piscina de cerámica (borde tileado + agua + brillo)
     dropShadow(this, 480, 730, 300, 0);
@@ -303,8 +249,6 @@ class MainScene extends Phaser.Scene {
     this.add.rectangle(480, 730, 250, 70, 0x6fd8ff).setDepth(1.15);
     this.add.ellipse(410, 700, 90, 20, 0xffffff, 0.45).setDepth(1.2); // reflejo
     solid(this, W, 480, 730, 300, 110);
-    furn(250, 730, 50, 90, 0xffd93b, 0xffe98a);
-    furn(710, 730, 50, 90, 0xffd93b, 0xffe98a);
     // Postes del cerco
     for (let fx = 80; fx <= 880; fx += 80) {
       this.add.rectangle(fx, 810, 12, 22, 0x6a4a2a).setDepth(56);
@@ -312,34 +256,34 @@ class MainScene extends Phaser.Scene {
 
     // ---- Raqueta (Hab 1, sobre el estante) ----
     this.pickups = [];
-    const raqView = this.physics.add.sprite(110, 74, 'raqueta').setDepth(200);
+    const raqView = this.physics.add.sprite(...MANSION.spawn.raqueta, 'raqueta').setDepth(200);
     this.pickups.push({ id: 'raqueta', label: 'Raqueta', view: raqView, carried: false });
     // Chocolate en la cocina (sobre la mesa comedor)
     const chocoKey = this.textures.exists('chocolate') ? 'chocolate' : 'choco';
-    const chView = this.physics.add.sprite(185, 538, chocoKey).setDepth(800);
+    const chView = this.physics.add.sprite(...MANSION.spawn.choco, chocoKey).setDepth(800);
     this.pickups.push({ id: 'chocolate', label: 'Chocolate', view: chView, carried: false });
 
     // ---- Ventana de Coni (muro norte, marco visible, inicia Abierta) ----
-    this.ventana = { x: 460, y: 40, abierta: true, frame: null, glass: null };
-    this.ventana.frame = this.add.rectangle(460, 40, 110, 22, 0x7a5a3a).setDepth(120);
-    this.ventana.glass = this.add.rectangle(460, 40, 94, 12, 0x9be8ff).setDepth(121);
-    this.ventana.label = roomLabel(this, 460, 64, 'Ventana: Abierta');
+    this.ventana = { x: MANSION.ventana.x, y: MANSION.ventana.y, abierta: true, frame: null, glass: null };
+    this.ventana.frame = this.add.rectangle(MANSION.ventana.x, MANSION.ventana.y, 110, 22, 0x7a5a3a).setDepth(120);
+    this.ventana.glass = this.add.rectangle(MANSION.ventana.x, MANSION.ventana.y, 94, 12, 0x9be8ff).setDepth(121);
+    this.ventana.label = roomLabel(this, MANSION.ventana.x, MANSION.ventana.y + 24, 'Ventana: Abierta');
 
     // ---- Protagonista: Jazmín (hitbox en los pies → camina por detrás) ----
-    this.player = this.physics.add.sprite(480, 335, 'jazmin');
+    this.player = this.physics.add.sprite(...MANSION.spawn.jugador, 'jazmin');
     this.player.setCollideWorldBounds(true).setDepth(600);
     this.player.body.setSize(20, 12);   // bounding box pequeño abajo
     this.player.body.setOffset(6, 36);
     // Sombra 2.5D bajo los pies (sigue al jugador)
-    this.shadow = this.add.ellipse(480, 335, 26, 10, 0x000000, 0.3).setDepth(599);
+    this.shadow = this.add.ellipse(...MANSION.spawn.jugador, 26, 10, 0x000000, 0.3).setDepth(599);
 
     this.physics.add.collider(this.player, this.walls);
 
     // ---- Coni NPC (dormida en su cama, barra 0-100) ----
-    this.coni = this.physics.add.sprite(380, 200, 'coni').setDepth(301);
+    this.coni = this.physics.add.sprite(...MANSION.spawn.coni, 'coni').setDepth(301);
     this.coni.body.setSize(18, 10);
     this.coni.body.setOffset(6, 32);
-    this.coniShadow = this.add.ellipse(380, 222, 24, 9, 0x000000, 0.3).setDepth(300);
+    this.coniShadow = this.add.ellipse(MANSION.spawn.coni[0], MANSION.spawn.coni[1] + 22, 24, 9, 0x000000, 0.3).setDepth(300);
     this.physics.add.collider(this.coni, this.walls);
     this.coniBar = 0;
     this.coniTarget = null;
@@ -374,7 +318,7 @@ class MainScene extends Phaser.Scene {
     // Cámara cercana en Jazmín + viñeta CSS en bordes + fade
     this.cameras.main.setBounds(0, 0, WORLD_W, WORLD_H);
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
-    this.cameras.main.setZoom(1.55);
+    this.cameras.main.setZoom(MANSION.zoom);
     this.cameras.main.fadeIn(400);
 
     // ---- Controles ----
@@ -397,13 +341,13 @@ class MainScene extends Phaser.Scene {
       fontFamily: 'Trebuchet MS', fontSize: '13px',
       backgroundColor: '#000000aa', color: '#ffffff', padding: { x: 6, y: 2 }
     }).setOrigin(0.5).setDepth(800).setVisible(false);
-    this.winHint = this.add.text(460, 112, '[Espacio] Abrir/Cerrar ventana', {
+    this.winHint = this.add.text(MANSION.ventana.x, MANSION.ventana.y + 72, '[Espacio] Abrir/Cerrar ventana', {
       fontFamily: 'Trebuchet MS', fontSize: '14px',
       backgroundColor: '#000000aa', color: '#9be8ff', padding: { x: 8, y: 4 }
     }).setOrigin(0.5).setDepth(700).setVisible(false);
 
     // Indicación visual TV
-    this.tvHint = this.add.text(505, 590, 'Pulsa E para la TV', {
+    this.tvHint = this.add.text(...MANSION.tv.hint, 'Pulsa E para la TV', {
       fontFamily: 'Trebuchet MS', fontSize: '16px',
       backgroundColor: '#000000aa', color: '#ffe45e', padding: { x: 8, y: 4 }
     }).setOrigin(0.5).setDepth(700).setVisible(false);
@@ -504,7 +448,7 @@ class MainScene extends Phaser.Scene {
   /* ---- Abejas ---- */
   spawnBee() {
     if (this.bees.getLength() >= this.BEE_MAX) return;
-    const b = this.bees.create(460, 70, 'abeja');
+    const b = this.bees.create(MANSION.ventana.x, MANSION.ventana.y + 30, 'abeja');
     b.setDepth(400).setCircle(7);
     b.t = Math.random() * 6;
     b.setVelocity(Phaser.Math.Between(-40, 40), 60);
@@ -548,8 +492,7 @@ class MainScene extends Phaser.Scene {
       const arrived = this.coniTarget &&
         Phaser.Math.Distance.Between(this.coni.x, this.coni.y, this.coniTarget.x, this.coniTarget.y) < 14;
       if (!this.coniTarget || arrived || this.coniIdle <= 0) {
-        const pts = [[110, 200], [470, 220], [720, 200], [480, 335], [250, 470], [600, 470], [860, 520], [300, 700]];
-        this.coniTarget = Phaser.Utils.Array.GetRandom(pts);
+        this.coniTarget = Phaser.Utils.Array.GetRandom(MANSION.wander);
         this.coniTarget = { x: this.coniTarget[0], y: this.coniTarget[1] };
         this.coniIdle = 6;
       }
@@ -794,7 +737,7 @@ class MainScene extends Phaser.Scene {
     this.shadow.setPosition(p.x, p.y + 22);
 
     // Proximidad TV (sin overlap permanente: chequeo por distancia)
-    const d = Phaser.Math.Distance.Between(p.x, p.y, 505, 448);
+    const d = Phaser.Math.Distance.Between(p.x, p.y, ...MANSION.tv.zone);
     this.nearTV = d < 150;
     this.tvHint.setVisible(this.nearTV);
     if (this.hud) this.hud.classList.toggle('hidden', !this.nearTV);

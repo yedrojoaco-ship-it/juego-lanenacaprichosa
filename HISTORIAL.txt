@@ -55,3 +55,10 @@ FASES FUTURAS (detalle al arrancar cada una):
   makeFloorPatterns, floorTextured, solid, roomLabel salen de
   game.js a js/gfx.js. Mapa pixel a pixel igual.
 ----------------------------------------------------------------
+[F1-P4] 2026-10-06 — Extrae js/data-mansion.js
+  Muros, puertas, pisos, labels, 23 muebles, plantas, spawns,
+  ventana, TV, zoom y wander points pasan a datos en
+  js/data-mansion.js; create() los consume con loops. Deco a
+  medida (manta, plantas, TV, piscina) sigue inline. Mapa
+  verificado: 46 solidos, 7 vanos libres, pickups alcanzables.
+----------------------------------------------------------------
