@@ -6,6 +6,7 @@ ESQUEMA DE CODIGOS (cada commit lleva su codigo en el mensaje):
   F<fase>-P<paso>  Fase y paso del roadmap (ej: F1-P3 = Fase 1, Paso 3).
   F<fase>-PX ...... Paso extra no planificado dentro de una fase.
   FIX-<tema> ...... Correccion de bug puntual (ej: FIX-audio).
+  TOOLS-<n> ....... Herramientas/config del proyecto (.opencode, skills).
 
 FASE 1 — Refactor modular (scripts clasicos, sin ES modules):
   F1-P0 ... Foto linea base: verificacion sin cambios.
@@ -79,4 +80,11 @@ FASES FUTURAS (detalle al arrancar cada una):
   orden de index.html sin duplicados ni errores. Tests Coni y
   Nivel 1 GREEN, mapa 46 solidos/7 vanos, 12/12 mixins OK.
   game.js: 1025 → 335 lineas. FASE 1 COMPLETA.
+----------------------------------------------------------------
+[TOOLS-1] 2026-10-06 — Skills y subagentes auto-invocables
+  .opencode/agent/ (10 agency-agents), .opencode/skills/ (8 gstack
+  con descripciones ES), .opencode/command/ (8 wrappers),
+  opencode.json (skills.paths + permissions) y AGENTS.md
+  (mapeo automatico + plugins). Desde aca: el asistente
+  commitea y pushea cada avance verificado sin pedir permiso.
 ----------------------------------------------------------------

@@ -1,0 +1,3 @@
+# Regenerable / pesado: no se versiona
+.opencode/vendor/
+**/node_modules/
