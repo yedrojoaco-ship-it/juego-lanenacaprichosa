@@ -69,5 +69,17 @@ html, body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  animation: pill-in 0.45s ease-out backwards;
 }
+.pill:nth-child(2) { animation-delay: 0.06s; }
+.pill:nth-child(3) { animation-delay: 0.12s; }
+.pill:nth-child(4) { animation-delay: 0.18s; }
+.pill:nth-child(5) { animation-delay: 0.24s; }
 .pill b { color: #ffe45e; }
+
+@keyframes pill-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#tv-hud { animation: pill-in 0.3s ease-out; }

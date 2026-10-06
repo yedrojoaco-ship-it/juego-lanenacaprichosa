@@ -18,10 +18,11 @@ class MenuScene extends Phaser.Scene {
       );
     }
 
-    this.add.text(width / 2, height / 2 - 90, 'LA NENA CAPRICHOSA', {
+    const titulo = this.add.text(width / 2, height / 2 - 90, 'LA NENA CAPRICHOSA', {
       fontFamily: 'Trebuchet MS', fontSize: '52px', color: '#ffd93b',
       stroke: '#3a1c00', strokeThickness: 8
     }).setOrigin(0.5);
+    this.tweens.add({ targets: titulo, y: height / 2 - 82, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
 
     this.add.text(width / 2, height / 2 - 30, 'La Mansión · Top-Down 2.5D', {
       fontFamily: 'Trebuchet MS', fontSize: '20px', color: '#cfc3ff'

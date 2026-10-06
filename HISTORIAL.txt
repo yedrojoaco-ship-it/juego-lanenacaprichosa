@@ -34,7 +34,8 @@ FASES FUTURAS (detalle al arrancar cada una):
   G1 .... Personajes 4-dir + sombras blandas. [COMPLETA]
   G2 .... Tiles y muebles Kenney sin tocar colisiones. [COMPLETA]
   G3 .... FX, luz y micro-animaciones. [COMPLETA]
-  G4 .... UI/HUD/menú polish. [EN CURSO]
+  G4 .... UI/HUD/menú polish. [COMPLETA]
+  G5 .... Auditoria peso + QA + cierre. [EN CURSO]
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -172,4 +173,9 @@ FASES FUTURAS (detalle al arrancar cada una):
   Pop al agarrar, shake de camara al daño, polvillo al correr,
   parpadeo del vidrio al togglear ventana, flash+shake en
   derrota. Sin particulas pesadas: todo tweens livianos.
+----------------------------------------------------------------
+[G4] 2026-10-06 — UI/HUD/menu polish
+  Retratos jazmin/coni junto a sus barras (reemplazan emojis),
+  borde dorado en pildora de manos, marco cartoon en overlays,
+  titulo del menu flotante, pills CSS con entrada escalonada.
 ----------------------------------------------------------------

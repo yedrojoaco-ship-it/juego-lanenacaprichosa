@@ -141,21 +141,21 @@ class MainScene extends Phaser.Scene {
     this.spawnJazmin();
 
     this.spawnConi();
-    // HUD fijo esquina superior: Insoportable + vida Jazmín
+    // HUD fijo esquina superior: retratos + barras (no lo mueve la cámara)
+    this.add.image(28, 24, 'coni', 0).setDisplaySize(22, 30).setScrollFactor(0).setDepth(901);
     this.hudBarBg = this.add.rectangle(150, 24, 220, 18, 0x000000, 0.55).setScrollFactor(0).setDepth(900);
     this.hudBarFill = this.add.rectangle(150, 24, 216, 12, 0x63c78a).setScrollFactor(0).setDepth(901);
-    this.hudBarTxt = this.add.text(16, 14, '😡 Coni', { fontFamily: 'Trebuchet MS', fontSize: '14px', color: '#fff' }).setScrollFactor(0).setDepth(901);
     this.VIDA_MAX = 100;
     this.vida = this.VIDA_MAX;
     this.danoCD = 0;
     this.fin = null; // 'derrota' | 'victoria'
-    // Barra de vida Jazmín (fija, no la mueve la cámara)
-    this.add.text(16, 36, '❤', { fontSize: '16px' }).setScrollFactor(0).setDepth(901);
+    // Barra de vida Jazmín con retrato
+    this.add.image(28, 46, 'jazmin', 0).setDisplaySize(22, 32).setScrollFactor(0).setDepth(901);
     this.hudVidaBg = this.add.rectangle(150, 46, 220, 16, 0x000000, 0.55).setScrollFactor(0).setDepth(900);
     this.hudVidaFill = this.add.rectangle(150, 46, 216, 11, 0x63c78a).setScrollFactor(0).setDepth(901);
     this.hudVidaNum = this.add.text(266, 37, '100', { fontFamily: 'Trebuchet MS', fontSize: '14px', color: '#fff' }).setScrollFactor(0).setDepth(901);
     // Manos: objeto equipado, esquina superior derecha (fijo)
-    this.hudHandsBg = this.add.rectangle(830, 30, 220, 30, 0x000000, 0.55).setScrollFactor(0).setDepth(900);
+    this.hudHandsBg = this.add.rectangle(830, 30, 220, 30, 0x000000, 0.55).setStrokeStyle(2, 0xffe45e, 0.7).setScrollFactor(0).setDepth(900);
     this.hudHandsTxt = this.add.text(830, 30, '✋ vacías', { fontFamily: 'Trebuchet MS', fontSize: '15px', color: '#ffe45e' }).setOrigin(0.5).setScrollFactor(0).setDepth(901);
     this._handsLabel = '';
     // Notificaciones flotantes (cola, una por vez)
@@ -267,6 +267,7 @@ class MainScene extends Phaser.Scene {
     const cx = 480, cy = 300;
     const dim = this.add.rectangle(cx, cy, 960, 600, 0x000000, 0.72).setScrollFactor(0).setDepth(1000);
     dim.setInteractive(); // bloquea clics al juego de fondo
+    this.add.rectangle(cx, cy - 20, 560, 340, 0x1a0f33, 0.95).setStrokeStyle(4, 0xffe45e, 1).setScrollFactor(0).setDepth(1000);
     this.add.text(cx, cy - 90, title, { fontFamily: 'Trebuchet MS', fontSize: '54px', color, fontStyle: 'bold',
       stroke: '#000', strokeThickness: 8 }).setOrigin(0.5).setScrollFactor(0).setDepth(1001);
     this.add.text(cx, cy - 30, motivo, { fontFamily: 'Trebuchet MS', fontSize: '20px', color: '#fff' }).setOrigin(0.5).setScrollFactor(0).setDepth(1001);
