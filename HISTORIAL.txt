@@ -50,3 +50,8 @@ FASES FUTURAS (detalle al arrancar cada una):
   AudioManager + GameAudio salen de game.js a js/audio-manager.js.
   TV (E/B/N) y SFX intactos. Sin cambios de comportamiento.
 ----------------------------------------------------------------
+[F1-P3] 2026-10-06 — Extrae js/gfx.js
+  dropShadow, box25D, wall3D, puerta, tilePattern,
+  makeFloorPatterns, floorTextured, solid, roomLabel salen de
+  game.js a js/gfx.js. Mapa pixel a pixel igual.
+----------------------------------------------------------------
