@@ -18,6 +18,7 @@ class BootScene extends Phaser.Scene {
     this.load.image('abeja', 'assets/images/abeja.png');
     this.load.image('extintor', 'assets/images/extintor.png');
     this.load.image('mopa', 'assets/images/mopa.png');
+    this.load.image('flotador', 'assets/images/flotador.png');
     this.load.image('piso_madera', 'assets/images/piso_madera.png');
     this.load.image('piso_azulejo', 'assets/images/piso_azulejo.png');
     this.load.on('loaderror', (f) => console.warn('[Assets] falta:', f.key, '→ fallback por código'));
@@ -126,6 +127,14 @@ class BootScene extends Phaser.Scene {
       g.lineStyle(1.5, 0x9a9a8a, 1);
       g.lineBetween(14, 24, 8, 38); g.lineBetween(14, 24, 20, 38); g.lineBetween(14, 24, 14, 38);
       g.generateTexture('mopa', 28, 40);
+    }
+    if (T('flotador')) { // anillo salvavidas rojo y blanco
+      g.clear();
+      g.lineStyle(9, 0xd93b3b, 1); g.strokeCircle(15, 15, 10);
+      g.lineStyle(9, 0xffffff, 1);
+      g.lineBetween(15, 1, 15, 8); g.lineBetween(15, 22, 15, 29);
+      g.lineBetween(1, 15, 8, 15); g.lineBetween(22, 15, 29, 15);
+      g.generateTexture('flotador', 30, 30);
     }
     g.destroy();
   }

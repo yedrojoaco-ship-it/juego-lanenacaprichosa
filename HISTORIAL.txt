@@ -26,7 +26,8 @@ FASES FUTURAS (detalle al arrancar cada una):
   F2 .... Sistema de eventos reutilizable (ThreatSystem). [COMPLETA]
   F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador). [COMPLETA]
   F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma). [COMPLETA]
-  F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones). [EN CURSO]
+  F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones). [COMPLETA]
+  F6 .... Niveles 4-5 + selector final + SDK CrazyGames. [EN CURSO]
   F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma).
   F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones).
   F6 .... Niveles 4-5 + selector de niveles + SDK CrazyGames.
@@ -131,4 +132,13 @@ FASES FUTURAS (detalle al arrancar cada una):
   cercano, -10 nivel). Resbalon -10 + deslizamiento. Bañera con
   colision solo en Nivel 3 (N1/N2 intactos). Menu con 3 niveles,
   victoria generica reutilizada. SFX agua/resbalon listos.
+----------------------------------------------------------------
+[F6] 2026-10-06 — Niveles 4-5 + SDK CrazyGames + QA (TDD)
+  ThreatJuguetes: 4 juguetes con ondas, Espacio quita pilas.
+  ThreatEscape: Coni fuga a la piscina (al agua = bar 100),
+  atrapar con flotador + cerrojo del ventanal. Menu 5 niveles,
+  SIGUIENTE generico, flotador/mopa PNG + fallbacks, SFX pila.
+  js/sdk.js con guards (gameplay/happytime/progreso local),
+  FIT+autoCenter, favicon, titulo final. QA: 7 tests + bundle
+  + mapa + mixins + pickups, todo GREEN.
 ----------------------------------------------------------------

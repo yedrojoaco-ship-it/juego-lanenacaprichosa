@@ -11,6 +11,7 @@ Para usar arte propio, coloca aquí los PNG con estos nombres y formatos:
 - peluche.png   → imagen simple (ideal 30x30, osito).
 - extintor.png  → imagen simple (ideal 32x44, matafuegos rojo).
 - mopa.png      → imagen simple (ideal 28x40, mopa).
+- flotador.png  → imagen simple (ideal 30x30, anillo).
 - abeja.png     → imagen simple (ideal 20x16).
 - piso_madera.png  → textura repetible de parquet (ideal 64x64, tileable).
 - piso_azulejo.png → textura repetible de azulejos (ideal 64x64, tileable).

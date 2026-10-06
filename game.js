@@ -12,6 +12,7 @@ class MainScene extends Phaser.Scene {
   init(data) {
     this.nivel = (data && data.nivel) || 1; // 1: abejas · 2: fuego cocina
   }  create() {
+    SDK.gameplayStart();
     const fr0 = this.textures.get('jazmin');
     this.jazSprite = !!(fr0 && fr0.frameTotal >= 16 && this.anims.exists('jaz-abajo'));
     makeFloorPatterns(this);
@@ -121,6 +122,11 @@ class MainScene extends Phaser.Scene {
       const mopView = this.physics.add.sprite(...MANSION.spawn.mopa, 'mopa').setDepth(200);
       this.pickups.push({ id: 'mopa', label: 'Mopa', view: mopView, carried: false });
     }
+    // Flotador en el patio (solo Nivel 5)
+    if (this.nivel >= 5) {
+      const floView = this.physics.add.sprite(...MANSION.spawn.flotador, 'flotador').setDepth(200);
+      this.pickups.push({ id: 'flotador', label: 'Flotador', view: floView, carried: false });
+    }
 
     // ---- Ventana de Coni (muro norte, marco visible, inicia Abierta) ----
     this.ventana = { x: MANSION.ventana.x, y: MANSION.ventana.y, abierta: true, frame: null, glass: null };
@@ -161,9 +167,13 @@ class MainScene extends Phaser.Scene {
     this.enjambre = null;
     this.fuego = null;
     this.agua = null;
+    this.juguetes = null;
+    this.escape = null;
     if (this.nivel === 1) this.enjambre = this.threats.registrar(new ThreatAbejas(this));
     else if (this.nivel === 2) this.fuego = this.threats.registrar(new ThreatFuego(this));
-    else this.agua = this.threats.registrar(new ThreatAgua(this));
+    else if (this.nivel === 3) this.agua = this.threats.registrar(new ThreatAgua(this));
+    else if (this.nivel === 4) this.juguetes = this.threats.registrar(new ThreatJuguetes(this));
+    else this.escape = this.threats.registrar(new ThreatEscape(this));
 
     // Cámara cercana en Jazmín + viñeta CSS en bordes + fade
     this.cameras.main.setBounds(0, 0, WORLD_W, WORLD_H);
@@ -260,6 +270,7 @@ class MainScene extends Phaser.Scene {
   gameOver(motivo) {
     if (this.fin) return;
     this.fin = 'derrota';
+    SDK.gameplayStop();
     this.player.setVelocity(0, 0);
     this.coni.setVelocity(0, 0);
     if (this.enjambre) this.enjambre.congelar();
@@ -272,6 +283,7 @@ class MainScene extends Phaser.Scene {
   victory() {
     if (this.fin) return;
     this.fin = 'victoria';
+    SDK.nivelCompletado(this.nivel);
     this.player.setVelocity(0, 0);
     this.coni.setVelocity(0, 0);
     GameAudio.playSFX('victoria');
@@ -287,10 +299,10 @@ class MainScene extends Phaser.Scene {
     }
     this.bigButton(330, 420, '🔄 REPETIR', () => this.scene.restart({ nivel: this.nivel }));
     this.bigButton(640, 420, '➡ SIGUIENTE NIVEL', () => {
-      if (this.nivel < 3) {
+      if (this.nivel < 5) {
         this.scene.start('Main', { nivel: this.nivel + 1 });
-      } else { // Nivel 4 aún no existe: aviso visible, el overlay sigue ahí
-        const t = this.add.text(480, 480, 'Nivel 4 próximamente…', {
+      } else { // Fin del juego: aviso visible, el overlay sigue ahí
+        const t = this.add.text(480, 480, '¡Juego completado! 💜', {
           fontFamily: 'Trebuchet MS', fontSize: '18px', color: '#ffe45e' })
           .setOrigin(0.5).setScrollFactor(0).setDepth(1002);
         this.tweens.add({ targets: t, alpha: 0, delay: 1200, duration: 500, onComplete: () => t.destroy() });
@@ -339,6 +351,9 @@ class MainScene extends Phaser.Scene {
       else if (this.hands && this.hands.id === 'raqueta') this.swing();
       else if (this.hands && this.hands.id === 'extintor' && this.fuego && this.fuego.usarExtintor()) { /* apagando */ }
       else if (this.hands && this.hands.id === 'mopa' && this.agua && this.agua.limpiarCercano()) { /* limpiando */ }
+      else if (this.juguetes && this.juguetes.quitarPilaSiCerca()) { /* sin pilas */ }
+      else if (this.hands && this.hands.id === 'flotador' && this.escape && this.escape.atrapar()) { /* a salvo */ }
+      else if (this.escape && this.escape.cerrarVentanal()) { /* cerrojo */ }
       else if (this.fuego && this.fuego.silenciarAlarma()) { /* alarma off */ }
       else if (this.agua && this.agua.cerrarCanilla()) { /* canilla off */ }
       else if (nv) this.toggleVentana();
@@ -360,6 +375,9 @@ class MainScene extends Phaser.Scene {
       }
       if (!this.notiFlags.agua && this.agua && this.agua.canilla && this.agua.nivel > 20) {
         this.notiFlags.agua = true; this.notify('¡Se inunda el baño! 💧');
+      }
+      if (!this.notiFlags.pilas && this.juguetes && this.juguetes.activos() > 0) {
+        this.notiFlags.pilas = true; this.notify('¡Quita las pilas! 🔋');
       }
       if (!this.notiFlags.coni && this.coniBar > 70) {
         this.notiFlags.coni = true; this.notify('¡Coni está incontrolable! 🍫');
@@ -402,6 +420,7 @@ const config = {
   width: 960,
   height: 600,
   backgroundColor: '#160b2e',
+  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   physics: { default: 'arcade', arcade: { gravity: { x: 0, y: 0 }, debug: false } },
   scene: [BootScene, MenuScene, MainScene]
 };

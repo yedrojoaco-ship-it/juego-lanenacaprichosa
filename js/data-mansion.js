@@ -85,6 +85,7 @@ const MANSION = {
     peluche: [540, 120], // cuarto de Coni
     extintor: [870, 430], // lavadero (Nivel 2)
     mopa: [760, 540], // lavadero (Nivel 3)
+    flotador: [660, 700], // patio (Nivel 5)
   },
   ventana: { x: 460, y: 40 },
   tv: { x: 505, y: 402, zone: [505, 448], hint: [505, 590] },

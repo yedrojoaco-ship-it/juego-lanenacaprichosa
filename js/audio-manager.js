@@ -79,13 +79,15 @@ class AudioManager {
   playAlarma() {}    // TODO: assets/sfx/alarma.mp3
   playAgua() {}      // TODO: assets/sfx/agua.mp3
   playResbalon() {}  // TODO: assets/sfx/resbalon.mp3
+  playPila() {}      // TODO: assets/sfx/pila.mp3
   playSFX(key) {
     const fn = { raquetazo: this.playRaquetazo, ventana: this.playVentana,
       dano: this.playDano, abeja_muerta: this.playAbejaMuerta,
       agarre: this.playAgarre, soltar: this.playSoltar, comer: this.playComer,
       victoria: this.playVictoria, derrota: this.playDerrota,
       extintor: this.playExtintor, alarma: this.playAlarma,
-      agua: this.playAgua, resbalon: this.playResbalon }[key];
+      agua: this.playAgua, resbalon: this.playResbalon,
+      pila: this.playPila }[key];
     if (fn) { try { fn.call(this); } catch (e) { /* noop */ } }
     console.log('[SFX]:', key);
   }
