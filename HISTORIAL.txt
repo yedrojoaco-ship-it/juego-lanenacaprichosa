@@ -62,3 +62,10 @@ FASES FUTURAS (detalle al arrancar cada una):
   medida (manta, plantas, TV, piscina) sigue inline. Mapa
   verificado: 46 solidos, 7 vanos libres, pickups alcanzables.
 ----------------------------------------------------------------
+[F1-P5] 2026-10-06 — Extrae entidades js/jazmin|coni|abeja.js
+  Metodos de MainScene movidos verbatim como mixins registrados
+  en window.__mixins (game.js los aplica antes del boot: orden
+  de carga deterministico). MainScene.update delega en
+  updateJazminMove/updateHandsCarry/updateConi/updateBees.
+  12/12 metodos resueltos, comportamiento identico.
+----------------------------------------------------------------

@@ -269,29 +269,9 @@ class MainScene extends Phaser.Scene {
     this.ventana.glass = this.add.rectangle(MANSION.ventana.x, MANSION.ventana.y, 94, 12, 0x9be8ff).setDepth(121);
     this.ventana.label = roomLabel(this, MANSION.ventana.x, MANSION.ventana.y + 24, 'Ventana: Abierta');
 
-    // ---- Protagonista: Jazmín (hitbox en los pies → camina por detrás) ----
-    this.player = this.physics.add.sprite(...MANSION.spawn.jugador, 'jazmin');
-    this.player.setCollideWorldBounds(true).setDepth(600);
-    this.player.body.setSize(20, 12);   // bounding box pequeño abajo
-    this.player.body.setOffset(6, 36);
-    // Sombra 2.5D bajo los pies (sigue al jugador)
-    this.shadow = this.add.ellipse(...MANSION.spawn.jugador, 26, 10, 0x000000, 0.3).setDepth(599);
+    this.spawnJazmin();
 
-    this.physics.add.collider(this.player, this.walls);
-
-    // ---- Coni NPC (dormida en su cama, barra 0-100) ----
-    this.coni = this.physics.add.sprite(...MANSION.spawn.coni, 'coni').setDepth(301);
-    this.coni.body.setSize(18, 10);
-    this.coni.body.setOffset(6, 32);
-    this.coniShadow = this.add.ellipse(MANSION.spawn.coni[0], MANSION.spawn.coni[1] + 22, 24, 9, 0x000000, 0.3).setDepth(300);
-    this.physics.add.collider(this.coni, this.walls);
-    this.coniBar = 0;
-    this.coniTarget = null;
-    this.coniIdle = 0;
-    // Barra sutil sobre Coni
-    this.coniBarBg = this.add.rectangle(0, 0, 52, 7, 0x000000, 0.55).setDepth(850);
-    this.coniBarFill = this.add.rectangle(0, 0, 50, 5, 0x63c78a).setDepth(851);
-    this.coniState = this.add.text(0, 0, '💤', { fontSize: '18px' }).setOrigin(0.5).setDepth(852);
+    this.spawnConi();
     // HUD fijo esquina superior: Insoportable + vida Jazmín
     this.hudBarBg = this.add.rectangle(150, 24, 220, 18, 0x000000, 0.55).setScrollFactor(0).setDepth(900);
     this.hudBarFill = this.add.rectangle(150, 24, 216, 12, 0x63c78a).setScrollFactor(0).setDepth(901);
@@ -310,10 +290,7 @@ class MainScene extends Phaser.Scene {
     this.hudHandsTxt = this.add.text(830, 30, '✋ vacías', { fontFamily: 'Trebuchet MS', fontSize: '15px', color: '#ffe45e' }).setOrigin(0.5).setScrollFactor(0).setDepth(901);
     this._handsLabel = '';
 
-    // ---- Abejas ----
-    this.bees = this.physics.add.group();
-    this.beeAcc = 0;
-    this.BEE_MAX = 8;
+    this.spawnEnjambre();
 
     // Cámara cercana en Jazmín + viñeta CSS en bordes + fade
     this.cameras.main.setBounds(0, 0, WORLD_W, WORLD_H);
@@ -328,19 +305,6 @@ class MainScene extends Phaser.Scene {
     this.keyB = this.input.keyboard.addKey('B');
     this.keyX = this.input.keyboard.addKey('X');
     this.keySpace = this.input.keyboard.addKey('SPACE');
-    this.facing = { x: 0, y: 1 }; // última dirección (para el raquetazo)
-    this.hands = null;            // 1 solo objeto: {id,label,view,carried}
-    this.PICK_R = 70;
-
-    // Prompt [X] reutilizable (objeto cercano o manos)
-    this.pickPrompt = this.add.text(0, 0, '[X]', {
-      fontFamily: 'Trebuchet MS', fontSize: '18px', fontStyle: 'bold',
-      backgroundColor: '#000000cc', color: '#ffe45e', padding: { x: 6, y: 2 }
-    }).setOrigin(0.5).setDepth(800).setVisible(false);
-    this.handTag = this.add.text(0, 0, '', {
-      fontFamily: 'Trebuchet MS', fontSize: '13px',
-      backgroundColor: '#000000aa', color: '#ffffff', padding: { x: 6, y: 2 }
-    }).setOrigin(0.5).setDepth(800).setVisible(false);
     this.winHint = this.add.text(MANSION.ventana.x, MANSION.ventana.y + 72, '[Espacio] Abrir/Cerrar ventana', {
       fontFamily: 'Trebuchet MS', fontSize: '14px',
       backgroundColor: '#000000aa', color: '#9be8ff', padding: { x: 8, y: 4 }
@@ -366,45 +330,6 @@ class MainScene extends Phaser.Scene {
     this.refreshTV({ tvOn: false, name: GameAudio.trackName() });
   }
 
-  /* ---- Inventario / manos (1 objeto) ---- */
-  nearestPickup() {
-    let best = null, bd = this.PICK_R;
-    for (const it of this.pickups) {
-      if (it.carried) continue;
-      const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, it.view.x, it.view.y);
-      if (d < bd) { bd = d; best = it; }
-    }
-    return best;
-  }
-
-  pickup(it) {
-    it.carried = true;
-    this.hands = it;
-    if (it.view.body) it.view.body.enable = false; // no estorba mientras se lleva
-    GameAudio.playSFX('agarre');
-  }
-
-  dropAt(x, y) {
-    const it = this.hands;
-    if (!it) return;
-    it.carried = false;
-    it.view.setPosition(x, y + 12).setDepth(y);
-    if (it.view.body) { it.view.body.enable = true; it.view.body.reset(x, y + 12); }
-    this.hands = null;
-    GameAudio.playSFX('soltar');
-  }
-
-  handleX(near) {
-    if (!this.hands) {
-      if (near) this.pickup(near); // agarrar
-    } else if (near) {
-      this.dropAt(this.player.x, this.player.y); // swap: soltar actual…
-      this.pickup(near);                          // …y agarrar el nuevo
-    } else {
-      this.dropAt(this.player.x, this.player.y); // soltar en el suelo
-    }
-  }
-
   /* ---- Ventana Coni ---- */
   toggleVentana() {
     const v = this.ventana;
@@ -413,156 +338,6 @@ class MainScene extends Phaser.Scene {
     v.frame.setFillStyle(v.abierta ? 0x7a5a3a : 0x4a3320);
     if (v.label) v.label.setText(v.abierta ? 'Ventana: Abierta' : 'Ventana: Cerrada');
     GameAudio.playSFX('ventana');
-  }
-
-  /* ---- Raquetazo ---- */
-  swing() {
-    const p = this.player;
-    const hx = p.x + this.facing.x * 42, hy = p.y + this.facing.y * 42;
-    // Hitbox temporal al frente (lista para enemigos futuros)
-    this.hitbox = this.add.rectangle(hx, hy, 62, 62, 0xffffff, 0.35).setDepth(p.y + 2);
-    this.tweens.add({ targets: this.hitbox, alpha: 0, scale: 1.4, duration: 160,
-      onComplete: () => this.hitbox && this.hitbox.destroy() });
-    // Sacudida cartoon de Jazmín
-    this.tweens.add({ targets: p, scale: 1.18, duration: 80, yoyo: true });
-    GameAudio.playSFX('raquetazo');
-    this.killBeesAt(hx, hy, 62);
-  }
-
-  /* ---- Coni: calmar ---- */
-  nearConi() {
-    return Phaser.Math.Distance.Between(this.player.x, this.player.y, this.coni.x, this.coni.y) < 95;
-  }
-
-  feedChocolate() {
-    const it = this.hands;
-    if (!it || it.id !== 'chocolate') return;
-    it.view.destroy(); // Coni se lo come
-    this.pickups.splice(this.pickups.indexOf(it), 1);
-    this.hands = null;
-    this.coniBar = calmarConi(this.coniBar); // -40 de golpe
-    this.coniState.setText('😋');
-    GameAudio.playSFX('comer');
-  }
-
-  /* ---- Abejas ---- */
-  spawnBee() {
-    if (this.bees.getLength() >= this.BEE_MAX) return;
-    const b = this.bees.create(MANSION.ventana.x, MANSION.ventana.y + 30, 'abeja');
-    b.setDepth(400).setCircle(7);
-    b.t = Math.random() * 6;
-    b.setVelocity(Phaser.Math.Between(-40, 40), 60);
-  }
-
-  killBeesAt(x, y, r) {
-    let mato = false;
-    for (const b of [...this.bees.getChildren()]) {
-      if (Phaser.Math.Distance.Between(x, y, b.x, b.y) < r) {
-        // Chispas/estrellitas
-        for (let i = 0; i < 4; i++) {
-          const s = this.add.circle(b.x, b.y, 3, [0xffe45e, 0xffffff, 0xff9ecb][i % 3]).setDepth(950);
-          this.tweens.add({ targets: s, x: b.x + Phaser.Math.Between(-26, 26),
-            y: b.y + Phaser.Math.Between(-26, 26), alpha: 0, duration: 280,
-            onComplete: () => s.destroy() });
-        }
-        b.destroy();
-        mato = true;
-      }
-    }
-    if (mato) GameAudio.playSFX('abeja_muerta');
-  }
-
-  updateConi(dt) {
-    // Amenaza: abejas cerca de Coni, ventana abierta o ruido (TV)
-    let beesCerca = false;
-    for (const b of this.bees.getChildren()) {
-      if (Phaser.Math.Distance.Between(b.x, b.y, this.coni.x, this.coni.y) < 260) { beesCerca = true; break; }
-    }
-    const amenaza = beesCerca || this.ventana.abierta || GameAudio.tvOn;
-    this.coniBar = coniTick(this.coniBar, dt, { amenaza });
-    const bar = this.coniBar;
-
-    // Velocidad según barra
-    const speed = bar <= 30 ? 0 : bar <= 70 ? 95 : 175;
-    if (speed === 0) {
-      this.coni.setVelocity(0, 0);
-      this.coniState.setText(this.hands && this.hands.id === 'chocolate' && this.nearConi() ? '🍫' : '💤');
-    } else {
-      this.coniIdle -= dt;
-      const arrived = this.coniTarget &&
-        Phaser.Math.Distance.Between(this.coni.x, this.coni.y, this.coniTarget.x, this.coniTarget.y) < 14;
-      if (!this.coniTarget || arrived || this.coniIdle <= 0) {
-        this.coniTarget = Phaser.Utils.Array.GetRandom(MANSION.wander);
-        this.coniTarget = { x: this.coniTarget[0], y: this.coniTarget[1] };
-        this.coniIdle = 6;
-      }
-      this.physics.moveTo(this.coni, this.coniTarget.x, this.coniTarget.y, speed);
-      this.coniState.setText(bar > 70 ? '🤪' : '😠');
-      if (bar > 70 && Math.random() < dt * 3) { // rastro caótico
-        const s = this.add.circle(this.coni.x, this.coni.y - 20, 3, 0xffe45e, 0.9).setDepth(849);
-        this.tweens.add({ targets: s, alpha: 0, y: s.y - 18, duration: 400, onComplete: () => s.destroy() });
-      }
-    }
-
-    // Visuales barra
-    const col = bar > 70 ? 0xff4d4d : bar > 30 ? 0xffb93b : 0x63c78a;
-    this.coniBarBg.setPosition(this.coni.x, this.coni.y - 38);
-    this.coniBarFill.setPosition(this.coni.x - (50 - 50 * bar / 100) / 2, this.coni.y - 38)
-      .setDisplaySize(50 * bar / 100, 5).setFillStyle(col);
-    this.coniState.setPosition(this.coni.x + 30, this.coni.y - 40);
-    this.coni.setDepth(this.coni.y);
-    this.coniShadow.setPosition(this.coni.x, this.coni.y + 20);
-    this.hudBarFill.setDisplaySize(216 * bar / 100, 12).setFillStyle(col);
-    this.hudBarFill.x = 150 - (216 - 216 * bar / 100) / 2;
-  }
-
-  updateBees(dt, now) {
-    // Spawner: ventana abierta → 1 abeja cada 4s
-    if (this.ventana.abierta) {
-      this.beeAcc += dt;
-      if (this.beeAcc >= 4) { this.beeAcc = 0; this.spawnBee(); }
-    } else {
-      this.beeAcc = 0;
-    }
-    // Persiguen a Coni con oscilación + dañan a Jazmín al tacto
-    for (const b of this.bees.getChildren()) {
-      b.t += dt;
-      const dx = this.coni.x - b.x, dy = this.coni.y - b.y;
-      const d = Math.hypot(dx, dy) || 1;
-      const sp = 75;
-      const px = -dy / d, py = dx / d; // perpendicular (revoloteo)
-      const wob = Math.sin(b.t * 7) * 45;
-      b.setVelocity(dx / d * sp + px * wob, dy / d * sp + py * wob);
-      b.setDepth(b.y);
-      if (Phaser.Math.Distance.Between(b.x, b.y, this.player.x, this.player.y) < 26 && now > this.danoCD) {
-        this.hurtJazmin(now);
-      }
-    }
-  }
-
-  /* ---- Daño a Jazmín (-15, parpadeo) ---- */
-  hurtJazmin(now) {
-    if (this.fin) return;
-    this.danoCD = now + 900;
-    this.vida = Math.max(0, this.vida - 15);
-    this.player.setTintFill(0xff4d4d);
-    this.tweens.add({ targets: this.player, alpha: 0.25, duration: 80, yoyo: true, repeat: 3,
-      onComplete: () => { this.player.setAlpha(1); this.player.clearTint(); } });
-    GameAudio.playSFX('dano');
-    this.refreshHUD();
-  }
-
-  /* ---- HUD fijo ---- */
-  refreshHUD() {
-    const pct = this.vida / this.VIDA_MAX;
-    const col = pct > 0.5 ? 0x63c78a : pct > 0.25 ? 0xffb93b : 0xff4d4d;
-    this.hudVidaFill.setDisplaySize(216 * pct, 11).setFillStyle(col);
-    this.hudVidaFill.x = 150 - (216 - 216 * pct) / 2;
-    this.hudVidaNum.setText('' + this.vida);
-    const label = this.hands
-      ? (this.hands.id === 'chocolate' ? '🍫 Chocolate' : '🎾 Raqueta')
-      : '✋ vacías';
-    if (label !== this._handsLabel) { this._handsLabel = label; this.hudHandsTxt.setText(label); }
   }
 
   /* ---- Fin de nivel ---- */
@@ -645,64 +420,15 @@ class MainScene extends Phaser.Scene {
   update(time, delta) {
     if (this.fin) return; // overlay de fin: todo pausado salvo UI
     const p = this.player;
-    const speed = 230;
     let vx = 0, vy = 0;
     if (this.cursors.left.isDown) vx = -1;
     if (this.cursors.right.isDown) vx = 1;
     if (this.cursors.up.isDown) vy = -1;
     if (this.cursors.down.isDown) vy = 1;
+    this.updateJazminMove(vx, vy);
 
-    // 8 direcciones normalizadas
-    if (vx !== 0 && vy !== 0) { vx *= Math.SQRT1_2; vy *= Math.SQRT1_2; }
-    p.setVelocity(vx * speed, vy * speed);
-
-    // Animación: spritesheet 4 dirs si hay PNG, si no flip + bote cartoon
-    if (vx !== 0 || vy !== 0) {
-      this.facing = { x: vx !== 0 ? Math.sign(vx) : 0, y: vy !== 0 ? Math.sign(vy) : 0 };
-    }
-    if (this.jazSprite) {
-      if (vx !== 0 || vy !== 0) {
-        const ax = Math.abs(vx), ay = Math.abs(vy);
-        const k = ax > ay ? (vx < 0 ? 'jaz-izq' : 'jaz-der')
-          : (vy < 0 ? 'jaz-arriba' : 'jaz-abajo');
-        if (p.anims.getName() !== k || !p.anims.isPlaying) p.anims.play(k, true);
-        p.setFlipX(false); p.setScale(1);
-      } else {
-        p.anims.stop(); p.setTexture('jazmin', 0);
-      }
-      if ((vx !== 0 || vy !== 0) && Math.floor(this.time.now / 280) % 2 === 0) GameAudio.playPaso();
-    } else {
-      if (vx < 0) p.setFlipX(true);
-      if (vx > 0) p.setFlipX(false);
-      if (vx !== 0 || vy !== 0) {
-        p.setScale(1 + Math.sin(this.time.now / 120) * 0.03);
-        if (Math.floor(this.time.now / 280) % 2 === 0) GameAudio.playPaso();
-      } else {
-        p.setScale(1);
-      }
-    }
-
-    // Objeto en manos sigue a Jazmín
-    if (this.hands) {
-      const icon = this.hands.id === 'chocolate' ? '🍫' : '🎾';
-      this.hands.view.setPosition(p.x + 14, p.y - 6).setDepth(p.y + 1);
-      this.handTag.setVisible(true)
-        .setPosition(p.x, p.y - 42)
-        .setText(icon + ' ' + this.hands.label);
-    } else {
-      this.handTag.setVisible(false);
-    }
-
-    // Prompt [X] sobre el objeto cercano (o [X] cambiar si ya lleva algo)
-    const near = this.nearestPickup();
-    if (near) {
-      this.pickPrompt.setVisible(true).setPosition(near.view.x, near.view.y - 38);
-      this.pickPrompt.setText(this.hands ? '[X] cambiar' : '[X] agarrar');
-    } else if (this.hands) {
-      this.pickPrompt.setVisible(true).setPosition(p.x, p.y - 58).setText('[X] soltar');
-    } else {
-      this.pickPrompt.setVisible(false);
-    }
+    // Manos: el objeto sigue a Jazmín, prompt [X] y tecla X (ver js/jazmin.js)
+    const near = this.updateHandsCarry();
     const donaChoco = this.hands && this.hands.id === 'chocolate' && this.nearConi();
     if (Phaser.Input.Keyboard.JustDown(this.keyX)) {
       if (donaChoco) this.feedChocolate(); else this.handleX(near);
@@ -749,6 +475,8 @@ class MainScene extends Phaser.Scene {
 }
 
 /* ---------------- Boot ---------------- */
+for (const m of window.__mixins || []) m(MainScene); // entidades (js/*.js)
+
 const config = {
   type: Phaser.AUTO,
   parent: 'game-container',
