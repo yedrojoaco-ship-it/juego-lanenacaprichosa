@@ -1,0 +1,102 @@
+===============================================================================
+                       DOCUMENTO DE DISEÑO DE JUEGO (GDD)
+                         JAZMÍN AL RESCATE: CAOS EN LA MANSIÓN
+===============================================================================
+
+1. VISIÓN GENERAL Y TONO DEL JUEGO
+-------------------------------------------------------------------------------
+* Título Provisorio: Jazmín al Rescate (Jazmín & Coni: Nanny Chaos)
+* Plataforma Objetivo: Web HTML5 (Phaser 3) para CrazyGames / Itch.io.
+* Audiencia: Casual, humorístico, apto para todo público con un toque de comedia absurda.
+* Estilo Visual: Cartoon 2.5D top-down (perspectiva 3/4) con volumen, luces cálidas y animaciones expresivas.
+* Formato de Juego: Gestión de crisis, resolución de micro-puzzles en tiempo real y acción rápida a clics/teclado.
+
+2. HISTORIA Y NARRATIVA
+-------------------------------------------------------------------------------
+* Protagonista: Jazmín, una joven niñera responsable pero con poca paciencia para las situaciones absurdas.
+* Co-protagonista: Coni, una niña rubia de 3 años, dulce cuando duerme, pero impredecible y destructiva cuando algo sale mal.
+* Premisa: Jazmín llega a su trabajo en una mansión gigantesca. Lo que parecía una jornada tranquila de cuidar a Coni mientras duerme se convierte en una serie de catástrofes cotidianas y desastres cómicos que debe resolver antes de que la casa quede destruida o Coni pierda el control por completo.
+* Introducción (Cinemática): Vídeo/animación donde Jazmín va en bicicleta a toda velocidad, casi la atropella un auto, insulta al conductor (humor ácido inocente) y llega exhausta a la mansión.
+
+3. PERSONAJES Y ESTADÍSTICAS
+-------------------------------------------------------------------------------
+A. JAZMÍN (Jugador):
+   - Movimiento: Flechas del teclado (8 direcciones).
+   - Sistema de Inventario: MÁXIMO 1 OBJETO EN MANO.
+     * Tecla X: Agarrar, soltar e intercambiar objetos automáticamente.
+     * Tecla ESPACIO: Acción principal con el entorno o herramienta activa.
+   - Salud (Barra de Vida: 0-100): Baja cuando sufre accidentes o ataques (picaduras de abejas, tropezones, quemaduras). Si llega a 0, pierde el nivel.
+
+B. CONI (NPC):
+   - Métrica Clave: 'Barra de Insoportable' (0 a 100).
+   - Estado 0-30 (Tranquila/Dormida): Permanece en su cama o jugando en su cuarto.
+   - Estado 31-70 (Inquieta): Camina rápido, tira objetos al suelo, enciende electrodomésticos, hace ruido.
+   - Estado 71-100 (Berrinche Total): Corre a máxima velocidad por toda la mansión desordenando todo a su paso.
+   - Si la barra llega a 100: Pierdes el nivel por colapso de la niñera.
+   - Pacificadores: Darle chocolates (obtenidos en la heladera), encender el televisor con música infantil, o ponerle su peluche en los brazos.
+
+4. MAPA: LA MANSIÓN Y SUS ZONAS
+-------------------------------------------------------------------------------
+Una mansión de un solo piso compacta, proporcional y llena de interacción:
+1. Cuarto de Coni: Cama, ventana al jardín, armario de juguetes, caja de música.
+2. Living Principal: Sillón en L, Televisor Jukebox (reproductor de MP3 interactivo con teclas B/N), mesa ratona, alfombra.
+3. Cocina Grande: Heladera (chocolates/comida), mesadas, cocina/horno, lavarropas, estantes con herramientas.
+4. Baño / Lavadero: Bañera, jabones, mangueras, productos de limpieza.
+5. Patio y Piscina: Ventanales, plantas, manguera de jardín, avisperos exterior.
+6. Pasillos y Aberturas: Marcos de puertas claros que limitan el movimiento realista.
+
+5. SISTEMA DE CONTROLES E INTERACCIÓN
+-------------------------------------------------------------------------------
+* Flechas de Dirección: Desplazamiento.
+* Tecla X: Agarrar objeto del suelo/estante. Si ya lleva uno, lo suelta y agarra el nuevo. Si no hay objeto, suelta el actual en el suelo.
+* Barra Espaciadora:
+  - Sin objeto + frente a Ventana: Abrir / Cerrar ventana.
+  - Con Raqueta equipada: Dar raquetazo (destruye abejas/insectos).
+  - Con Esponja/Trapo equipado: Limpiar manchas del suelo.
+  - Con Extintor equipado: Apagar incendios en la cocina.
+  - Con Manguera equipada: Llenar la piscina o apagar plantas secas.
+* Tecla E (en la TV): Prender / Apagar Televisor (Música de fondo).
+* Teclas B / N: Cambiar de canción en la TV.
+
+6. IDEAS DE NIVELES Y AMENAZAS EXPANDIDAS
+-------------------------------------------------------------------------------
+NIVEL 1: "Ataque de Abejas y La Ventana Abierta"
+- Amenaza: Enjambre de abejas entra por la ventana del cuarto de Coni.
+- Solución: Agarrar raqueta con X, eliminar abejas con Espacio, cerrar la ventana. Calmar a Coni con un chocolate.
+
+NIVEL 2: "Caos en la Cocina y la Sopa Voladora"
+- Amenaza: Una olla en la cocina se prende fuego, emite humo y activa la alarma de incendios, asustando a Coni.
+- Solución: Buscar el extintor en el lavadero, apagar el fuego con Espacio, apagar la alarma en el pasillo antes de que Coni llegue a 100 de Insoportable.
+
+NIVEL 3: "Inundación en el Baño"
+- Amenaza: Coni abre las canillas de la bañera y se escapa. El agua empieza a inundar los pasillos. Jazmín puede resbalarse y perder vida.
+- Solución: Cerrar la canilla, agarrar el secador/mopa y limpiar los charcos con Espacio para evitar caídas.
+
+NIVEL 4: "Juguetes Poseídos / Electrodomésticos"
+- Amenaza: Varios juguetes a pila de Coni se activan solos haciendo ruidos molestos en distintas habitaciones.
+- Solución: Correr por la casa presionando Espacio sobre cada juguete para quitarle las pilas antes de que la barra de Insoportable se dispare.
+
+NIVEL 5: "La Escapada al Patio"
+- Amenaza: Coni abre el ventanal del patio y corre directo hacia la piscina.
+- Solución: Agarrar el flotador, atrapar a Coni antes de que caiga al agua, cerrar el ventanal con cerrojo y darle su peluche favorito.
+
+7. INTERFAZ DE USUARIO (HUD) Y AUDIO
+-------------------------------------------------------------------------------
+* HUD Superior:
+  - Esquina Izquierda: Barra de Vida de Jazmín (Corazones) + Barra de Insoportable de Coni (Carita con color verde/amarillo/rojo).
+  - Esquina Derecha: Icono de inventario (Muestra qué lleva en las manos).
+  - Panel Inferior: Notificaciones flotantes ("¡Cierra la ventana!", "¡Coni tiene hambre!").
+* Sistema de Audio (AudioManager.js):
+  - Música: Sistema Jukebox en la TV con archivos .mp3 cargados desde /assets/music/.
+  - Efectos SFX: Pasos, raquetazo, zumbido de abeja, llanto/risa de Coni, quemadura, cierre de ventana, ladrido de perro, alarma de incendio.
+
+8. ARQUITECTURA TÉCNICA (PHASER 3)
+-------------------------------------------------------------------------------
+* Estructura Modular:
+  - `index.html`: Contenedor del Canvas y estilos CSS centrado responsive.
+  - `BootScene.js`: Carga de assets (imágenes, spritesheets, audio).
+  - `MenuScene.js`: Menú con botón Jugar, Créditos y Selección de Nivel.
+  - `MainScene.js`: Lógica del juego, mapas, colisiones físicas (Arcade Physics), Depth Sorting (z-index por Y de pies).
+  - `HUDScene.js`: Escena superpuesta para las barras de vida y mensajes fijados.
+  - `AudioManager.js`: Controlador global de música y SFX.
+===============================================================================

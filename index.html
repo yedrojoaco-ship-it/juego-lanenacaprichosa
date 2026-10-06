@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Nena Caprichosa — Mansión</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+</head>
+<body>
+  <div id="game-wrap">
+    <div id="game-container"></div>
+    <div id="vignette"></div>
+
+    <div id="tv-hud" class="hidden">
+      <span id="tv-status">📺 TV apagada</span>
+      <button id="btn-tv-toggle" type="button">Encender / Apagar (E)</button>
+      <button id="btn-tv-prev" type="button">⏮ Anterior (B)</button>
+      <button id="btn-tv-next" type="button">Siguiente (N) ⏭</button>
+    </div>
+
+    <div id="help">
+      <span class="pill">🎮 Flechas · moverse</span>
+      <span class="pill">✋ <b>X</b> agarrar / soltar</span>
+      <span class="pill">★ <b>Espacio</b> usar</span>
+      <span class="pill">📺 <b>E</b> TV · 🎵 <b>B</b>/<b>N</b> temas</span>
+      <span class="pill">🍫 calma a Coni</span>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

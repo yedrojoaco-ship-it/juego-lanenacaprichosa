@@ -1,0 +1,2 @@
+Coloca aqui track1.mp3 y track2.mp3
+La TV los reproduce con Audio HTML5. Sin archivos, el juego igual abre y la TV muestra estado visual.

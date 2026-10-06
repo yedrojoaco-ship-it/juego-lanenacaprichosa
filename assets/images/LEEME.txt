@@ -1,0 +1,16 @@
+SPRITES OPCIONALES — La Nena Caprichosa
+El juego funciona SIN estos archivos (usa fallbacks dibujados por código).
+Para usar arte propio, coloca aquí los PNG con estos nombres y formatos:
+
+- jazmin.png  → spritesheet 128x192 (grilla 4x4 de 32x48):
+    fila 0 frames 0-3: caminar abajo · fila 1 (4-7): izquierda ·
+    fila 2 (8-11): derecha · fila 3 (12-15): arriba.
+- coni.png      → imagen simple (ideal 30x42, niña rubia).
+- raqueta.png   → imagen simple (ideal 32x48).
+- chocolate.png → imagen simple (ideal 28x24).
+- abeja.png     → imagen simple (ideal 20x16).
+- piso_madera.png  → textura repetible de parquet (ideal 64x64, tileable).
+- piso_azulejo.png → textura repetible de azulejos (ideal 64x64, tileable).
+
+Con servidor local (http://localhost:8000) los PNG se cargan al recargar.
+Doble-clic (file://) puede bloquear la carga: en ese caso se ve el fallback.

@@ -1,0 +1,39 @@
+HISTORIAL DE CAMBIOS — Jazmín al Rescate: Caos en la Mansión
+================================================================
+
+ESQUEMA DE CODIGOS (cada commit lleva su codigo en el mensaje):
+  BASE-0 ......... Commit inicial: juego monolitico pre-refactor.
+  F<fase>-P<paso>  Fase y paso del roadmap (ej: F1-P3 = Fase 1, Paso 3).
+  F<fase>-PX ...... Paso extra no planificado dentro de una fase.
+  FIX-<tema> ...... Correccion de bug puntual (ej: FIX-audio).
+
+FASE 1 — Refactor modular (scripts clasicos, sin ES modules):
+  F1-P0 ... Foto linea base: verificacion sin cambios.
+  F1-P1 ... Extrae js/rules.js (logica pura: clamp100, coniTick,
+            calmarConi, checkDerrota, checkVictoria).
+  F1-P2 ... Extrae js/audio-manager.js (AudioManager + GameAudio).
+  F1-P3 ... Extrae js/gfx.js (dropShadow, box25D, wall3D, puerta,
+            patrones de piso, floorTextured, solid, roomLabel).
+  F1-P4 ... Extrae js/data-mansion.js (MUROS_H, MUROS_V, PUERTAS,
+            pisos, muebles, WANDER_PTS, spawns, paleta).
+  F1-P5 ... Extrae entidades: js/jazmin.js, js/coni.js, js/abeja.js.
+  F1-P6 ... Extrae escenas: BootScene, MenuScene, HUDScene;
+            MainScene queda como orquestacion (~100 lineas).
+  F1-P7 ... Cierre Fase 1: game.js minimo + verificacion integral.
+
+FASES FUTURAS (detalle al arrancar cada una):
+  F2 .... Sistema de eventos reutilizable (ThreatSystem).
+  F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador).
+  F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma).
+  F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones).
+  F6 .... Niveles 4-5 + selector de niveles + SDK CrazyGames.
+
+----------------------------------------------------------------
+[BASE-0] 2026-10-06 — Commit inicial
+  Juego monolitico funcional (game.js ~1000 lineas): menu, mansion
+  compacta 960x860 con 7 puertas, Jazmin 8 dirs con hitbox en pies,
+  inventario 1 objeto (X/Espacio), TV jukebox, Coni + barra 0-100,
+  chocolate -40, abejas + dano -15, HUD fijo, derrota/victoria con
+  restart, fallback grafico + pills CSS. Sin assets PNG/MP3 reales
+  (solo LEEMEs en assets/images y assets/music).
+----------------------------------------------------------------
