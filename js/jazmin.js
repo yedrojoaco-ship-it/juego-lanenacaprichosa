@@ -12,8 +12,9 @@ MainScene.prototype.spawnJazmin = function () {
   this.player.setCollideWorldBounds(true).setDepth(600);
   this.player.body.setSize(20, 12);   // bounding box pequeño abajo
   this.player.body.setOffset(6, 36);
-  // Sombra 2.5D bajo los pies (sigue al jugador)
-  this.shadow = this.add.ellipse(...MANSION.spawn.jugador, 26, 10, 0x000000, 0.3).setDepth(599);
+  // Sombra blanda bajo los pies (sigue al jugador)
+  this.shadow = softShadow(this, ...MANSION.spawn.jugador, 26);
+  this.shadow.setDepth(599);
   this.physics.add.collider(this.player, this.walls);
 
   this.facing = { x: 0, y: 1 }; // última dirección (para el raquetazo)

@@ -16,8 +16,8 @@ PERSONAJES (spritesheet 128x192 = grilla 4x4 de 32x48):
 - jazmin.png  → fila 0 (frames 0-3): caminar ABAJO · fila 1 (4-7):
   IZQUIERDA · fila 2 (8-11): DERECHA · fila 3 (12-15): ARRIBA.
   Pelo castaño, vestido rosa, 4 frames por dirección.
-- coni.png    → mismo formato 4x4 (el código hoy usa 1 frame;
-  al traer 16 frames se anima sola). Niña rubia, vestido lila.
+- coni.png      → spritesheet 128x168 (grilla 4x4 de 30x42, mismo
+  orden de filas que jazmin). Niña rubia, vestido lila.
 
 OBJETOS (imagen simple, centrados):
 - raqueta.png   → 32x48.  chocolate.png → 28x24.  choco: alias legacy.

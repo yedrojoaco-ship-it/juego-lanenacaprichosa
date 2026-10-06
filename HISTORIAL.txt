@@ -31,7 +31,8 @@ FASES FUTURAS (detalle al arrancar cada una):
 
   GRAFICOS (packs Kenney + full juice + fallbacks):
   G0 .... Direccion de arte + espec PNG. [COMPLETA]
-  G1 .... Personajes 4-dir + sombras blandas. [EN CURSO]
+  G1 .... Personajes 4-dir + sombras blandas. [COMPLETA]
+  G2 .... Tiles y muebles Kenney sin tocar colisiones. [EN CURSO]
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -152,4 +153,11 @@ FASES FUTURAS (detalle al arrancar cada una):
   LEEME.txt reescrito como spec: fuentes Kenney CC0, paleta,
   reglas (nombre manda, transparente, 3/4, tiles 64), lista
   exacta de PNG por key y como probar cada asset. Sin codigo.
+----------------------------------------------------------------
+[G1] 2026-10-06 — Personajes 4-dir + sombras blandas
+  setupCharAnims generico (jazmin 32x48 + coni 30x42 como
+  spritesheets; con 16 frames se animan solos, si no fallback
+  estatico). Coni juega anim segun velocidad. Abejas con
+  aleteo (scale pulse). softShadow (nucleo+halo) bajo pies de
+  Jazmin y Coni. LEEME actualizado.
 ----------------------------------------------------------------

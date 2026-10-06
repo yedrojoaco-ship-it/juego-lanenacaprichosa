@@ -11,7 +11,7 @@ class BootScene extends Phaser.Scene {
     // Si un PNG falta, el loader falla en silencio y se usa el fallback
     // dibujado por código en ensureFallbackTextures(): el juego nunca se rompe.
     this.load.spritesheet('jazmin', 'assets/images/jazmin.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.image('coni', 'assets/images/coni.png');
+    this.load.spritesheet('coni', 'assets/images/coni.png', { frameWidth: 30, frameHeight: 42 });
     this.load.image('raqueta', 'assets/images/raqueta.png');
     this.load.image('chocolate', 'assets/images/chocolate.png');
     this.load.image('peluche', 'assets/images/peluche.png');
@@ -26,7 +26,8 @@ class BootScene extends Phaser.Scene {
 
   create() {
     this.ensureFallbackTextures();
-    this.setupJazminAnims();
+    this.setupCharAnims('jazmin', 'jaz');
+    this.setupCharAnims('coni', 'con');
     makeFloorPatterns(this);
     this.scene.start('Menu');
   }
@@ -139,18 +140,18 @@ class BootScene extends Phaser.Scene {
     g.destroy();
   }
 
-  /* Anims 4 direcciones si jazmin.png es spritesheet 4x4 (32x48, 16 frames) */
-  setupJazminAnims() {
-    this.jazSprite = false;
+  /* Anims 4 direcciones si el PNG es spritesheet 4x4 (16 frames).
+   * Con fallback de 1 frame no hace nada: el juego sigue igual. */
+  setupCharAnims(key, prefix) {
     try {
-      const fr = this.textures.get('jazmin');
-      if (fr && fr.frameTotal >= 16 && !this.anims.exists('jaz-abajo')) {
+      const fr = this.textures.get(key);
+      if (fr && fr.frameTotal >= 16 && !this.anims.exists(prefix + '-abajo')) {
         const mk = (k, s) => this.anims.create({ key: k,
-          frames: this.anims.generateFrameNumbers('jazmin', { start: s, end: s + 3 }),
+          frames: this.anims.generateFrameNumbers(key, { start: s, end: s + 3 }),
           frameRate: 9, repeat: -1 });
-        mk('jaz-abajo', 0); mk('jaz-izq', 4); mk('jaz-der', 8); mk('jaz-arriba', 12);
-        this.jazSprite = true;
+        mk(prefix + '-abajo', 0); mk(prefix + '-izq', 4);
+        mk(prefix + '-der', 8); mk(prefix + '-arriba', 12);
       }
-    } catch (e) { this.jazSprite = false; }
+    } catch (e) { /* sin spritesheet: fallback estático */ }
   }
 }

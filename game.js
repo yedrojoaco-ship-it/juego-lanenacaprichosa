@@ -15,6 +15,8 @@ class MainScene extends Phaser.Scene {
     SDK.gameplayStart();
     const fr0 = this.textures.get('jazmin');
     this.jazSprite = !!(fr0 && fr0.frameTotal >= 16 && this.anims.exists('jaz-abajo'));
+    const fr1 = this.textures.get('coni');
+    this.coniSprite = !!(fr1 && fr1.frameTotal >= 16 && this.anims.exists('con-abajo'));
     makeFloorPatterns(this);
     const texMadera = this.textures.exists('piso_madera') ? 'piso_madera' : 'pat-madera';
     const texAzulejo = this.textures.exists('piso_azulejo') ? 'piso_azulejo' : 'pat-azulejo';

@@ -11,7 +11,8 @@ MainScene.prototype.spawnConi = function () {
   this.coni = this.physics.add.sprite(...MANSION.spawn.coni, 'coni').setDepth(301);
   this.coni.body.setSize(18, 10);
   this.coni.body.setOffset(6, 32);
-  this.coniShadow = this.add.ellipse(MANSION.spawn.coni[0], MANSION.spawn.coni[1] + 22, 24, 9, 0x000000, 0.3).setDepth(300);
+  this.coniShadow = softShadow(this, MANSION.spawn.coni[0], MANSION.spawn.coni[1] + 22, 24);
+  this.coniShadow.setDepth(300);
   this.physics.add.collider(this.coni, this.walls);
   this.coniBar = 0;
   this.coniTarget = null;
@@ -34,6 +35,7 @@ MainScene.prototype.updateConi = function (dt) {
   if (speed === 0) {
     this.coni.setVelocity(0, 0);
     this.coniState.setText(this.hands && (this.hands.id === 'chocolate' || this.hands.id === 'peluche') && this.nearConi() ? (ICONS[this.hands.id] || '🍫') : '💤');
+    if (this.coniSprite) { this.coni.anims.stop(); this.coni.setTexture('coni', 0); }
   } else {
     this.coniIdle -= dt;
     const arrived = this.coniTarget &&
@@ -45,6 +47,13 @@ MainScene.prototype.updateConi = function (dt) {
     }
     this.physics.moveTo(this.coni, this.coniTarget.x, this.coniTarget.y, speed);
     this.coniState.setText(bar > 70 ? '🤪' : '😠');
+    if (this.coniSprite) { // anim 4-dir si hay spritesheet
+      const cvx = this.coni.body.velocity.x, cvy = this.coni.body.velocity.y;
+      if (cvx !== 0 || cvy !== 0) {
+        const ck = Math.abs(cvx) > Math.abs(cvy) ? (cvx < 0 ? 'con-izq' : 'con-der') : (cvy < 0 ? 'con-arriba' : 'con-abajo');
+        if (this.coni.anims.getName() !== ck || !this.coni.anims.isPlaying) this.coni.anims.play(ck, true);
+      }
+    }
     if (bar > 70 && Math.random() < dt * 3) { // rastro caótico
       const s = this.add.circle(this.coni.x, this.coni.y - 20, 3, 0xffe45e, 0.9).setDepth(849);
       this.tweens.add({ targets: s, alpha: 0, y: s.y - 18, duration: 400, onComplete: () => s.destroy() });

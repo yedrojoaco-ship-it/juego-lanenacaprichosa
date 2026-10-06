@@ -77,6 +77,7 @@ class ThreatAbejas extends Threat {
       const wob = Math.sin(b.t * 7) * 45;
       b.setVelocity(dx / d * sp + px * wob, dy / d * sp + py * wob);
       b.setDepth(b.y);
+      b.setScale(1 + Math.sin(b.t * 20) * 0.12); // aleteo
       if (Phaser.Math.Distance.Between(b.x, b.y, scene.player.x, scene.player.y) < 26 && now > scene.danoCD) {
         scene.hurtJazmin(now);
       }

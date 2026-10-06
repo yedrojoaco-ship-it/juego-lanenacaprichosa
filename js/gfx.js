@@ -100,6 +100,17 @@ function solid(scene, group, x, y, w, h) {
 /* Iconos de inventario compartidos (HUD + prompts) */
 const ICONS = { raqueta: '🎾', chocolate: '🍫', peluche: '🧸', extintor: '🧯', mopa: '🧹', flotador: '🛟' };
 
+/* Sombra blanda bajo pies: núcleo + halo. Misma API que un GameObject
+ * para setPosition/setDepth, así el update no cambia. */
+function softShadow(scene, x, y, w) {
+  const halo = scene.add.ellipse(x, y, w + 12, 14, 0x000000, 0.12);
+  const core = scene.add.ellipse(x, y, w, 9, 0x000000, 0.25);
+  return {
+    setPosition(px, py) { halo.setPosition(px, py); core.setPosition(px, py); },
+    setDepth(d) { halo.setDepth(d); core.setDepth(d + 0.05); },
+  };
+}
+
 function roomLabel(scene, x, y, text) {  return scene.add.text(x, y, text, {
     fontFamily: 'Trebuchet MS', fontSize: '22px',
     color: '#ffffff', stroke: '#000000', strokeThickness: 4
