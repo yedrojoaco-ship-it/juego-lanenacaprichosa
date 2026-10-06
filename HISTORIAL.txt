@@ -40,6 +40,10 @@ FASES FUTURAS (detalle al arrancar cada una):
   (G0-G5: mejora grafica integral cerrada.)
 
   ASSETS REALES (A-codes: integra PNG/MP3 del usuario + packs Kenney):
+  A1 .... Sheets normalizados + escalas adaptativas. [COMPLETA]
+  A2 .... SFX reales (OGG Kenney) en banco WebAudio. [COMPLETA]
+  A3 .... Pisos JPG + fixes depth/jpg. [COMPLETA]
+  A4 .... UI pack (menu/HUD) + generic-items. [PENDIENTE]
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -195,6 +199,17 @@ FASES FUTURAS (detalle al arrancar cada una):
   _sheet.png + gen/raqueta_clean.png (chroma magenta). Loader,
   anims 6/dir, escalas y bodies adaptativos (SHEET + fallback).
   Objetos a 32px via addPickup. Verificado con screenshots.
+----------------------------------------------------------------
+[A2] 2026-10-06 — SFX reales Kenney (banco WebAudio)
+  13 OGGs en assets/sfx/ con mapeo en LEEME. Boot preload +
+  GameAudio.bank global; playXxx reales, stubs solo para
+  paso/grito/extintor/alarma. Banco 13/13 verificado en vivo.
+----------------------------------------------------------------
+[A3] 2026-10-06 — Pisos JPG + FIX-depth + FIX-jpg
+  .png→.jpg reales (TileSprite corrompe fotos grandes: fotos
+  por image+cover, patrones por tile). Pasto base depth -3
+  (tapaba pisos y losa). Parquet verificado con screenshot,
+  consola sin errores ni warnings.
 ----------------------------------------------------------------
 [FIX-depth] 2026-10-06 — Pasto base tapaba pisos y losa
   El tile/image exterior iba en depth 0 sobre pisos (-2) y

@@ -21,6 +21,7 @@ class AudioManager {
       console.warn('[AudioManager] No se pudo cargar:', this.currentTrack());
     });
     this.onChange = null; // callback UI: (state) => {}
+    this.bank = {}; // SFX WebAudio registrados por BootScene (assets/sfx/*.ogg)
   }
 
   currentTrack() { return this.tracks[this.index]; }
@@ -62,24 +63,27 @@ class AudioManager {
     if (this.tvOn) this.playTV(); else this._notify();
   }
 
-  // ---- Stubs SFX: enlazar .mp3 aquí más adelante ----
-  playPaso() {}      // TODO: assets/sfx/paso.mp3
-  playRaquetazo() {} // TODO: assets/sfx/raquetazo.mp3
-  playGrito() {}     // TODO: assets/sfx/grito.mp3
-  playPuerta() {}    // TODO: assets/sfx/puerta.mp3
-  playVentana() {}   // TODO: assets/sfx/ventana.mp3
-  playDano() {}      // TODO: assets/sfx/dano.mp3
-  playAbejaMuerta() {} // TODO: assets/sfx/abeja_muerta.mp3
-  playAgarre() {}    // TODO: assets/sfx/agarre.mp3
-  playSoltar() {}    // TODO: assets/sfx/soltar.mp3
-  playComer() {}     // TODO: assets/sfx/comer.mp3
-  playVictoria() {}  // TODO: assets/sfx/victoria.mp3
-  playDerrota() {}   // TODO: assets/sfx/derrota.mp3
-  playExtintor() {}  // TODO: assets/sfx/extintor.mp3
-  playAlarma() {}    // TODO: assets/sfx/alarma.mp3
-  playAgua() {}      // TODO: assets/sfx/agua.mp3
-  playResbalon() {}  // TODO: assets/sfx/resbalon.mp3
-  playPila() {}      // TODO: assets/sfx/pila.mp3
+  // ---- SFX reales (assets/sfx/*.ogg, banco WebAudio) + stubs ----
+  sfx(id) {
+    try { const s = this.bank[id]; if (s) s.play(); } catch (e) { /* noop */ }
+  }
+  playPaso() {}      // sin equivalente en el pack (stub)
+  playRaquetazo() { this.sfx('raquetazo'); }
+  playGrito() {}     // sin equivalente en el pack (stub)
+  playPuerta() { this.sfx('puerta'); }
+  playVentana() { this.sfx('ventana'); }
+  playDano() { this.sfx('dano'); }
+  playAbejaMuerta() { this.sfx('abeja_muerta'); }
+  playAgarre() { this.sfx('agarre'); }
+  playSoltar() { this.sfx('soltar'); }
+  playComer() { this.sfx('comer'); }
+  playVictoria() { this.sfx('victoria'); }
+  playDerrota() { this.sfx('derrota'); }
+  playExtintor() {}  // sin equivalente en el pack (stub)
+  playAlarma() {}    // sin equivalente en el pack (stub)
+  playAgua() { this.sfx('agua'); }
+  playResbalon() { this.sfx('resbalon'); }
+  playPila() { this.sfx('pila'); }
   playSFX(key) {
     const fn = { raquetazo: this.playRaquetazo, ventana: this.playVentana,
       dano: this.playDano, abeja_muerta: this.playAbejaMuerta,

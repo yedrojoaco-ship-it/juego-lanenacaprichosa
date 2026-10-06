@@ -23,6 +23,11 @@ class BootScene extends Phaser.Scene {
     this.load.image('piso_azulejo', 'assets/images/piso_azulejo.jpg');
     this.load.image('piso_pasto', 'assets/images/piso_pasto.jpg');
     this.load.image('piso_ceramica', 'assets/images/piso_ceramica.jpg');
+    // SFX (Kenney interface-sounds, ver assets/sfx/LEEME.txt)
+    for (const k of ['agarre', 'soltar', 'comer', 'raquetazo', 'ventana', 'puerta',
+      'dano', 'abeja_muerta', 'victoria', 'derrota', 'agua', 'resbalon', 'pila']) {
+      this.load.audio('sfx-' + k, ['assets/sfx/' + k + '.ogg']);
+    }
     this.load.on('loaderror', (f) => console.warn('[Assets] falta:', f.key, '→ fallback por código'));
   }
 
@@ -32,6 +37,11 @@ class BootScene extends Phaser.Scene {
     this.setupCharAnims('coni', 'con');
     this.setupCharAnims('abeja', 'ab');
     makeFloorPatterns(this);
+    // Banco SFX global (compartido por todas las escenas)
+    for (const k of ['agarre', 'soltar', 'comer', 'raquetazo', 'ventana', 'puerta',
+      'dano', 'abeja_muerta', 'victoria', 'derrota', 'agua', 'resbalon', 'pila']) {
+      try { if (this.cache.audio.exists('sfx-' + k)) GameAudio.bank[k] = this.sound.add('sfx-' + k); } catch (e) { /* noop */ }
+    }
     this.scene.start('Menu');
   }
 

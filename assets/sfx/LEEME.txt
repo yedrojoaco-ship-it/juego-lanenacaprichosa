@@ -1,0 +1,23 @@
+SFX — Jazmín al Rescate (Kenney interface-sounds, CC0)
+=====================================================
+Copiados a assets/sfx/<juego>.ogg. Para re-mapear un efecto basta
+reemplazar el archivo manteniendo el nombre.
+
+  agarre.ogg       ← click_002.ogg   (agarrar objeto)
+  soltar.ogg       ← drop_001.ogg    (soltar objeto)
+  comer.ogg        ← pluck_001.ogg   (Coni come / abraza)
+  raquetazo.ogg    ← scratch_002.ogg (golpe de raqueta)
+  ventana.ogg      ← open_002.ogg    (abrir/cerrar ventana)
+  puerta.ogg       ← open_001.ogg    (ventanal, cerrojo)
+  dano.ogg         ← error_001.ogg   (picadura, quemadura)
+  abeja_muerta.ogg ← bong_001.ogg    (abeja eliminada)
+  victoria.ogg     ← confirmation_001.ogg
+  derrota.ogg      ← error_005.ogg
+  agua.ogg         ← glass_002.ogg   (canilla, mopa)
+  resbalon.ogg     ← scratch_004.ogg (resbalar en charco)
+  pila.ogg         ← click_004.ogg   (quitar pilas)
+
+Sin equivalente en el pack (stubs silenciosos): paso, grito,
+extintor, alarma. Si se consigue el MP3/OGG, agregarlo a
+assets/sfx/<id>.ogg + preload/bank en js/boot.js + método
+playX() en js/audio-manager.js (patrón existente).
