@@ -35,7 +35,9 @@ FASES FUTURAS (detalle al arrancar cada una):
   G2 .... Tiles y muebles Kenney sin tocar colisiones. [COMPLETA]
   G3 .... FX, luz y micro-animaciones. [COMPLETA]
   G4 .... UI/HUD/menú polish. [COMPLETA]
-  G5 .... Auditoria peso + QA + cierre. [EN CURSO]
+  G5 .... Auditoria peso + QA + cierre. [COMPLETA]
+
+  (G0-G5: mejora grafica integral cerrada.)
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -178,4 +180,10 @@ FASES FUTURAS (detalle al arrancar cada una):
   Retratos jazmin/coni junto a sus barras (reemplazan emojis),
   borde dorado en pildora de manos, marco cartoon en overlays,
   titulo del menu flotante, pills CSS con entrada escalonada.
+----------------------------------------------------------------
+[G5] 2026-10-06 — Auditoria + QA + cierre grafico
+  Juego 102 KB (sobrado para CrazyGames). Consola limpia:
+  logs SFX solo con window.__DEBUG. QA integral: 7 tests
+  GREEN + bundle + mapa + mixins + pickups. TODOs restantes =
+  solo stubs MP3 documentados. Fases G0-G5 COMPLETAS.
 ----------------------------------------------------------------

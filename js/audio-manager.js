@@ -89,7 +89,7 @@ class AudioManager {
       agua: this.playAgua, resbalon: this.playResbalon,
       pila: this.playPila }[key];
     if (fn) { try { fn.call(this); } catch (e) { /* noop */ } }
-    console.log('[SFX]:', key);
+    if (window.__DEBUG) console.log('[SFX]:', key); // consola limpia en QA/store
   }
 }
 
