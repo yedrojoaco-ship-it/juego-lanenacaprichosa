@@ -37,3 +37,16 @@ FASES FUTURAS (detalle al arrancar cada una):
   restart, fallback grafico + pills CSS. Sin assets PNG/MP3 reales
   (solo LEEMEs en assets/images y assets/music).
 ----------------------------------------------------------------
+[F1-P0] 2026-10-06 — Linea base verificada (sin cambios de codigo)
+  node --check OK + tests proxy GREEN (Coni, Nivel 1) + mapa OK
+  (47 solidos, 7 vanos libres). Punto de comparacion del refactor.
+----------------------------------------------------------------
+[F1-P1] 2026-10-06 — Extrae js/rules.js
+  clamp100, coniTick, calmarConi, checkDerrota, checkVictoria salen
+  de game.js a js/rules.js (script clasico en index.html). Tests
+  proxy ahora leen js/rules.js. Sin cambios de comportamiento.
+----------------------------------------------------------------
+[F1-P2] 2026-10-06 — Extrae js/audio-manager.js
+  AudioManager + GameAudio salen de game.js a js/audio-manager.js.
+  TV (E/B/N) y SFX intactos. Sin cambios de comportamiento.
+----------------------------------------------------------------
