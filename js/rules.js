@@ -15,12 +15,18 @@ function coniTick(bar, dt, f) {
 function calmarConi(bar, n) {
   return clamp100(bar - (n || 40));
 }
-/* ---- Reglas de fin de Nivel 1 (puras, testeables) ---- */
+/* ---- Fuego Nivel 2: intensidad 0-100, extintor resta 34 por uso ---- */
+function fuegoTick(v, dt, f) {
+  const rise = 5 * dt;
+  const baja = f.uso ? 34 : 0;
+  return clamp100(v + rise - baja);
+}
+/* ---- Reglas de fin de nivel (puras, testeables) ----
+ * La victoria es genérica: amenazas resueltas + Coni calma.
+ * (ThreatSystem.todasResueltas() + coniBar < 50 en el update.)
+ */
 function checkDerrota(vida, coniBar) {
   if (vida <= 0) return 'vida';
   if (coniBar >= 100) return 'coni';
   return null;
-}
-function checkVictoria(ventanaCerrada, abejas, coniBar) {
-  return ventanaCerrada && abejas === 0 && coniBar < 50;
 }

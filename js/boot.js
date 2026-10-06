@@ -16,6 +16,7 @@ class BootScene extends Phaser.Scene {
     this.load.image('chocolate', 'assets/images/chocolate.png');
     this.load.image('peluche', 'assets/images/peluche.png');
     this.load.image('abeja', 'assets/images/abeja.png');
+    this.load.image('extintor', 'assets/images/extintor.png');
     this.load.image('piso_madera', 'assets/images/piso_madera.png');
     this.load.image('piso_azulejo', 'assets/images/piso_azulejo.png');
     this.load.on('loaderror', (f) => console.warn('[Assets] falta:', f.key, '→ fallback por código'));
@@ -107,6 +108,15 @@ class BootScene extends Phaser.Scene {
       g.fillStyle(0x222222, 1); g.fillTriangle(16, 9, 19, 9, 16, 12);     // aguijón
       g.fillStyle(0x222222, 1); g.fillCircle(4, 8, 1.4);                 // ojo
       g.generateTexture('abeja', 20, 16);
+    }
+    if (T('extintor')) { // matafuegos rojo con manguera
+      g.clear();
+      g.fillStyle(0x8a1a1a, 1); g.fillRoundedRect(9, 12, 14, 28, 5);
+      g.fillStyle(0xd93b3b, 1); g.fillRoundedRect(11, 12, 8, 28, 4); // brillo
+      g.fillStyle(0x333333, 1); g.fillRect(13, 6, 6, 6);            // válvula
+      g.lineStyle(3, 0x222222, 1); g.lineBetween(16, 10, 26, 22);    // manguera
+      g.fillStyle(0xdddddd, 1); g.fillRect(5, 22, 22, 6);           // etiqueta
+      g.generateTexture('extintor', 32, 44);
     }
     g.destroy();
   }

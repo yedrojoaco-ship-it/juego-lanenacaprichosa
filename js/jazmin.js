@@ -148,11 +148,11 @@ MainScene.prototype.swing = function () {
   this.threats.recibirImpacto(hx, hy, 62);
 };
 
-/* ---- Daño a Jazmín (-15, parpadeo) ---- */
-MainScene.prototype.hurtJazmin = function (now) {
+/* ---- Daño a Jazmín (n puntos, parpadeo) ---- */
+MainScene.prototype.hurtJazmin = function (now, n) {
   if (this.fin) return;
   this.danoCD = now + 900;
-  this.vida = Math.max(0, this.vida - 15);
+  this.vida = Math.max(0, this.vida - (n || 15));
   this.player.setTintFill(0xff4d4d);
   this.tweens.add({ targets: this.player, alpha: 0.25, duration: 80, yoyo: true, repeat: 3,
     onComplete: () => { this.player.setAlpha(1); this.player.clearTint(); } });

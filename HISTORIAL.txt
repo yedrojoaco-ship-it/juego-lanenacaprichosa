@@ -24,7 +24,8 @@ FASE 1 — Refactor modular (scripts clasicos, sin ES modules):
 
 FASES FUTURAS (detalle al arrancar cada una):
   F2 .... Sistema de eventos reutilizable (ThreatSystem). [COMPLETA]
-  F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador). [EN CURSO]
+  F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador). [COMPLETA]
+  F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma). [EN CURSO]
   F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma).
   F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones).
   F6 .... Niveles 4-5 + selector de niveles + SDK CrazyGames.
@@ -113,4 +114,13 @@ FASES FUTURAS (detalle al arrancar cada una):
   Notificaciones flotantes con cola (ventana/Coni/vida).
   FIX: refreshHUD no existia (se perdio en un refactor) y una
   picadura crasheaba el juego; restaurado con ICONS.
+----------------------------------------------------------------
+[F4] 2026-10-06 — Nivel 2: Caos en la Cocina (TDD: test antes)
+  ThreatFuego (olla + intensidad 0-100 + alarma + humo) sobre
+  ThreatSystem: Main no lo conoce en detalle. Extintor en
+  lavadero (-34 por uso, quemadura -10 si tocas la olla).
+  Alarma en pasillo (Espacio la silencia). Menu con Nivel 1/2,
+  Main recibe {nivel}, restart conserva nivel, victoria
+  generica (todasResueltas + bar<50). checkVictoria eliminado
+  (dead code). SFX extintor/alarma listos.
 ----------------------------------------------------------------

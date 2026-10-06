@@ -83,6 +83,7 @@ const MANSION = {
     raqueta: [110, 74],
     chocos: [[260, 460], [285, 462], [310, 460]], // frente a heladera (stock 3)
     peluche: [540, 120], // cuarto de Coni
+    extintor: [870, 430], // lavadero (Nivel 2)
   },
   ventana: { x: 460, y: 40 },
   tv: { x: 505, y: 402, zone: [505, 448], hint: [505, 590] },

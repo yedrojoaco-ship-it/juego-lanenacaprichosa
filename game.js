@@ -9,10 +9,9 @@
 class MainScene extends Phaser.Scene {
   constructor() { super('Main'); }
 
-
-
-
-  create() {
+  init(data) {
+    this.nivel = (data && data.nivel) || 1; // 1: abejas · 2: fuego cocina
+  }  create() {
     const fr0 = this.textures.get('jazmin');
     this.jazSprite = !!(fr0 && fr0.frameTotal >= 16 && this.anims.exists('jaz-abajo'));
     makeFloorPatterns(this);
@@ -112,6 +111,11 @@ class MainScene extends Phaser.Scene {
     const pelKey = this.textures.exists('peluche') ? 'peluche' : 'coni';
     const pelView = this.physics.add.sprite(...MANSION.spawn.peluche, pelKey).setDepth(200).setTint(0xffc0cb);
     this.pickups.push({ id: 'peluche', label: 'Peluche', view: pelView, carried: false });
+    // Extintor en el lavadero (solo Nivel 2)
+    if (this.nivel >= 2) {
+      const extView = this.physics.add.sprite(...MANSION.spawn.extintor, 'extintor').setDepth(200);
+      this.pickups.push({ id: 'extintor', label: 'Extintor', view: extView, carried: false });
+    }
 
     // ---- Ventana de Coni (muro norte, marco visible, inicia Abierta) ----
     this.ventana = { x: MANSION.ventana.x, y: MANSION.ventana.y, abierta: true, frame: null, glass: null };
@@ -147,9 +151,12 @@ class MainScene extends Phaser.Scene {
       backgroundColor: '#000000aa', padding: { x: 12, y: 6 }
     }).setOrigin(0.5).setScrollFactor(0).setDepth(950).setAlpha(0);
 
-    // Amenazas Nivel 1 (Fase 2: ThreatSystem, extensible a fuego/agua)
+    // Amenazas según nivel (Fase 2+: ThreatSystem extensible)
     this.threats = new ThreatSystem(this);
-    this.enjambre = this.threats.registrar(new ThreatAbejas(this));
+    this.enjambre = null;
+    this.fuego = null;
+    if (this.nivel === 1) this.enjambre = this.threats.registrar(new ThreatAbejas(this));
+    else this.fuego = this.threats.registrar(new ThreatFuego(this));
 
     // Cámara cercana en Jazmín + viñeta CSS en bordes + fade
     this.cameras.main.setBounds(0, 0, WORLD_W, WORLD_H);
@@ -248,11 +255,11 @@ class MainScene extends Phaser.Scene {
     this.fin = 'derrota';
     this.player.setVelocity(0, 0);
     this.coni.setVelocity(0, 0);
-    this.enjambre.congelar();
+    if (this.enjambre) this.enjambre.congelar();
     GameAudio.playSFX('derrota');
     const msg = motivo === 'vida' ? '¡Jazmín se quedó sin vida!' : '¡Coni se volvió incontrolable!';
     this.endOverlay('DERROTA', '#ff6b6b', msg);
-    this.bigButton(480, 380, '🔄 REINTENTAR NIVEL', () => this.scene.restart());
+    this.bigButton(480, 380, '🔄 REINTENTAR NIVEL', () => this.scene.restart({ nivel: this.nivel }));
   }
 
   victory() {
@@ -271,12 +278,12 @@ class MainScene extends Phaser.Scene {
         angle: 360, duration: Phaser.Math.Between(900, 2200),
         onComplete: () => s.destroy() });
     }
-    this.bigButton(330, 420, '🔄 REPETIR', () => this.scene.restart());
+    this.bigButton(330, 420, '🔄 REPETIR', () => this.scene.restart({ nivel: this.nivel }));
     this.bigButton(640, 420, '➡ SIGUIENTE NIVEL', () => {
-      if (this.scene.manager.keys['Level2']) {
-        this.scene.start('Level2');
-      } else { // Nivel 2 aún no existe: aviso visible, el overlay sigue ahí
-        const t = this.add.text(480, 480, 'Nivel 2 próximamente…', {
+      if (this.nivel < 2) {
+        this.scene.start('Main', { nivel: this.nivel + 1 });
+      } else { // Nivel 3 aún no existe: aviso visible, el overlay sigue ahí
+        const t = this.add.text(480, 480, 'Nivel 3 próximamente…', {
           fontFamily: 'Trebuchet MS', fontSize: '18px', color: '#ffe45e' })
           .setOrigin(0.5).setScrollFactor(0).setDepth(1002);
         this.tweens.add({ targets: t, alpha: 0, delay: 1200, duration: 500, onComplete: () => t.destroy() });
@@ -323,6 +330,8 @@ class MainScene extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.keySpace)) {
       if (donaCalma) this.feedChocolate();
       else if (this.hands && this.hands.id === 'raqueta') this.swing();
+      else if (this.hands && this.hands.id === 'extintor' && this.fuego && this.fuego.usarExtintor()) { /* apagando */ }
+      else if (this.fuego && this.fuego.silenciarAlarma()) { /* alarma off */ }
       else if (nv) this.toggleVentana();
     }
 
@@ -334,8 +343,11 @@ class MainScene extends Phaser.Scene {
 
     // Notificaciones flotantes (una vez por nivel)
     if (!this.fin) {
-      if (!this.notiFlags.ventana && this.ventana.abierta && this.enjambre.vivas() > 0) {
+      if (!this.notiFlags.ventana && this.enjambre && this.ventana.abierta && this.enjambre.vivas() > 0) {
         this.notiFlags.ventana = true; this.notify('¡Cierra la ventana! 🐝');
+      }
+      if (!this.notiFlags.fuego && this.fuego && this.fuego.intensidad > 0) {
+        this.notiFlags.fuego = true; this.notify('¡Fuego en la cocina! 🔥');
       }
       if (!this.notiFlags.coni && this.coniBar > 70) {
         this.notiFlags.coni = true; this.notify('¡Coni está incontrolable! 🍫');
@@ -346,11 +358,11 @@ class MainScene extends Phaser.Scene {
       this.mostrarNoti();
     }
 
-    // Fin de Nivel 1
+    // Fin de nivel genérico: amenazas resueltas + Coni calma
     if (!this.fin) {
       const causa = checkDerrota(this.vida, this.coniBar);
       if (causa) this.gameOver(causa);
-      else if (checkVictoria(!this.ventana.abierta, this.enjambre.vivas(), this.coniBar)) this.victory();
+      else if (this.threats.todasResueltas() && this.coniBar < 50) this.victory();
     }
 
     // Orden Y para sensación de volumen 2.5D
