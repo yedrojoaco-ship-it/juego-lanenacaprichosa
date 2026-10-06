@@ -27,9 +27,15 @@ FASES FUTURAS (detalle al arrancar cada una):
   F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador). [COMPLETA]
   F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma). [COMPLETA]
   F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones). [COMPLETA]
-  F6 .... Niveles 4-5 + selector final + SDK CrazyGames. [EN CURSO]
-  F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma).
-  F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones).
+  F6 .... Niveles 4-5 + selector final + SDK CrazyGames. [COMPLETA]
+
+  GRAFICOS (packs Kenney + full juice + fallbacks):
+  G0 .... Direccion de arte + espec PNG. [COMPLETA]
+  G1 .... Personajes 4-dir + sombras blandas. [EN CURSO]
+  G2 .... Tiles y muebles Kenney sin tocar colisiones.
+  G3 .... FX, luz y micro-animaciones.
+  G4 .... UI/HUD/menu polish.
+  G5 .... Auditoria peso + QA + cierre.
   F6 .... Niveles 4-5 + selector de niveles + SDK CrazyGames.
 
 ----------------------------------------------------------------
@@ -141,4 +147,9 @@ FASES FUTURAS (detalle al arrancar cada una):
   js/sdk.js con guards (gameplay/happytime/progreso local),
   FIT+autoCenter, favicon, titulo final. QA: 7 tests + bundle
   + mapa + mixins + pickups, todo GREEN.
+----------------------------------------------------------------
+[G0] 2026-10-06 — Direccion de arte + espec de PNG
+  LEEME.txt reescrito como spec: fuentes Kenney CC0, paleta,
+  reglas (nombre manda, transparente, 3/4, tiles 64), lista
+  exacta de PNG por key y como probar cada asset. Sin codigo.
 ----------------------------------------------------------------

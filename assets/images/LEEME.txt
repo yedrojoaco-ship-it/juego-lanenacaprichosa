@@ -1,20 +1,37 @@
-SPRITES OPCIONALES — La Nena Caprichosa
-El juego funciona SIN estos archivos (usa fallbacks dibujados por código).
-Para usar arte propio, coloca aquí los PNG con estos nombres y formatos:
+DIRECCIÓN DE ARTE — Jazmín al Rescate (Fase G0)
+================================================
+Fuente: packs gratuitos CC0 de Kenney.nl (Interior Pack, Topdown
+Shooter, Furniture Pack) + itch.io/OpenGameArt solo si calza el
+mismo trazo cartoon. Paleta cálida del juego: amarillo #ffd93b,
+violeta #6c4dff, madera #b9834f, rosa #ff5d8f.
 
-- jazmin.png  → spritesheet 128x192 (grilla 4x4 de 32x48):
-    fila 0 frames 0-3: caminar abajo · fila 1 (4-7): izquierda ·
-    fila 2 (8-11): derecha · fila 3 (12-15): arriba.
-- coni.png      → imagen simple (ideal 30x42, niña rubia).
-- raqueta.png   → imagen simple (ideal 32x48).
-- chocolate.png → imagen simple (ideal 28x24).
-- peluche.png   → imagen simple (ideal 30x30, osito).
-- extintor.png  → imagen simple (ideal 32x44, matafuegos rojo).
-- mopa.png      → imagen simple (ideal 28x40, mopa).
-- flotador.png  → imagen simple (ideal 30x30, anillo).
-- abeja.png     → imagen simple (ideal 20x16).
-- piso_madera.png  → textura repetible de parquet (ideal 64x64, tileable).
-- piso_azulejo.png → textura repetible de azulejos (ideal 64x64, tileable).
+REGLAS (no negociables):
+1. El nombre del PNG manda: debe coincidir con la key que el código
+   ya carga. Si falta, el fallback por código lo reemplaza.
+2. Fondo 100% transparente. Sin sombras horneadas (las pone el juego).
+3. Personajes vistos 3/4 desde arriba (cabeza grande, pies chicos).
+4. Tiles de piso en grilla 64x64 repetible (tileable).
 
-Con servidor local (http://localhost:8000) los PNG se cargan al recargar.
-Doble-clic (file://) puede bloquear la carga: en ese caso se ve el fallback.
+PERSONAJES (spritesheet 128x192 = grilla 4x4 de 32x48):
+- jazmin.png  → fila 0 (frames 0-3): caminar ABAJO · fila 1 (4-7):
+  IZQUIERDA · fila 2 (8-11): DERECHA · fila 3 (12-15): ARRIBA.
+  Pelo castaño, vestido rosa, 4 frames por dirección.
+- coni.png    → mismo formato 4x4 (el código hoy usa 1 frame;
+  al traer 16 frames se anima sola). Niña rubia, vestido lila.
+
+OBJETOS (imagen simple, centrados):
+- raqueta.png   → 32x48.  chocolate.png → 28x24.  choco: alias legacy.
+- abeja.png     → 20x16 (2 frames opcionales mismo archivo lado a lado).
+- extintor.png  → 32x44 rojo.  mopa.png → 28x40.  flotador.png → 30x30.
+- peluche.png   → 30x30 osito (si falta: fallback coni rosado).
+
+PISOS (64x64 tileable, se repiten con tileSprite):
+- piso_madera.png   → parquet cálido (habs + living + pasillo).
+- piso_azulejo.png  → azulejo claro (cocina + lavadero).
+- (pat-pasto y pat-ceramica siguen procedurales salvo que se aporte PNG
+  con la misma key anteponiendo 'piso_': ej. piso_pasto.png — avisar
+  para cablear la key en boot.js.)
+
+CÓMO PROBAR UN PNG: soltarlo en assets/images/, recargar con servidor
+local (http://localhost:8000). Por consola sale "[Assets] falta: <key>"
+por cada PNG ausente. Peso objetivo total assets < 5 MB (CrazyGames).
