@@ -69,3 +69,8 @@ FASES FUTURAS (detalle al arrancar cada una):
   updateJazminMove/updateHandsCarry/updateConi/updateBees.
   12/12 metodos resueltos, comportamiento identico.
 ----------------------------------------------------------------
+[F1-P6] 2026-10-06 — Extrae js/boot.js y js/menu.js
+  BootScene (preload + fallbacks + anims + patrones, luego Menu)
+  y MenuScene salen de game.js. MainScene conserva solo create/
+  update de orquestacion + fin de nivel. Boot→Menu→Main.
+----------------------------------------------------------------
