@@ -103,10 +103,15 @@ class MainScene extends Phaser.Scene {
     this.pickups = [];
     const raqView = this.physics.add.sprite(...MANSION.spawn.raqueta, 'raqueta').setDepth(200);
     this.pickups.push({ id: 'raqueta', label: 'Raqueta', view: raqView, carried: false });
-    // Chocolate en la cocina (sobre la mesa comedor)
+    // Chocolates en la heladera (stock 3, GDD) + peluche en lo de Coni
     const chocoKey = this.textures.exists('chocolate') ? 'chocolate' : 'choco';
-    const chView = this.physics.add.sprite(...MANSION.spawn.choco, chocoKey).setDepth(800);
-    this.pickups.push({ id: 'chocolate', label: 'Chocolate', view: chView, carried: false });
+    for (const pos of MANSION.spawn.chocos) {
+      const v = this.physics.add.sprite(pos[0], pos[1], chocoKey).setDepth(800);
+      this.pickups.push({ id: 'chocolate', label: 'Chocolate', view: v, carried: false });
+    }
+    const pelKey = this.textures.exists('peluche') ? 'peluche' : 'coni';
+    const pelView = this.physics.add.sprite(...MANSION.spawn.peluche, pelKey).setDepth(200).setTint(0xffc0cb);
+    this.pickups.push({ id: 'peluche', label: 'Peluche', view: pelView, carried: false });
 
     // ---- Ventana de Coni (muro norte, marco visible, inicia Abierta) ----
     this.ventana = { x: MANSION.ventana.x, y: MANSION.ventana.y, abierta: true, frame: null, glass: null };
@@ -134,6 +139,13 @@ class MainScene extends Phaser.Scene {
     this.hudHandsBg = this.add.rectangle(830, 30, 220, 30, 0x000000, 0.55).setScrollFactor(0).setDepth(900);
     this.hudHandsTxt = this.add.text(830, 30, '✋ vacías', { fontFamily: 'Trebuchet MS', fontSize: '15px', color: '#ffe45e' }).setOrigin(0.5).setScrollFactor(0).setDepth(901);
     this._handsLabel = '';
+    // Notificaciones flotantes (cola, una por vez)
+    this.notiCola = [];
+    this.notiFlags = {};
+    this.notiTxt = this.add.text(480, 84, '', {
+      fontFamily: 'Trebuchet MS', fontSize: '20px', fontStyle: 'bold', color: '#ffe45e',
+      backgroundColor: '#000000aa', padding: { x: 12, y: 6 }
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(950).setAlpha(0);
 
     // Amenazas Nivel 1 (Fase 2: ThreatSystem, extensible a fuego/agua)
     this.threats = new ThreatSystem(this);
@@ -185,6 +197,28 @@ class MainScene extends Phaser.Scene {
     v.frame.setFillStyle(v.abierta ? 0x7a5a3a : 0x4a3320);
     if (v.label) v.label.setText(v.abierta ? 'Ventana: Abierta' : 'Ventana: Cerrada');
     GameAudio.playSFX('ventana');
+  }
+
+  /* ---- HUD fijo ---- */
+  notify(texto) {
+    this.notiCola.push(texto);
+    this.mostrarNoti();
+  }
+
+  mostrarNoti() {
+    if (this.notiTxt.alpha > 0 || this.notiCola.length === 0 || this.fin) return;
+    this.notiTxt.setText(this.notiCola.shift()).setAlpha(1);
+    this.tweens.add({ targets: this.notiTxt, alpha: 0, delay: 2200, duration: 500 });
+  }
+
+  refreshHUD() {
+    const pct = this.vida / this.VIDA_MAX;
+    const col = pct > 0.5 ? 0x63c78a : pct > 0.25 ? 0xffb93b : 0xff4d4d;
+    this.hudVidaFill.setDisplaySize(216 * pct, 11).setFillStyle(col);
+    this.hudVidaFill.x = 150 - (216 - 216 * pct) / 2;
+    this.hudVidaNum.setText('' + this.vida);
+    const label = this.hands ? ((ICONS[this.hands.id] || '') + ' ' + this.hands.label) : '✋ vacías';
+    if (label !== this._handsLabel) { this._handsLabel = label; this.hudHandsTxt.setText(label); }
   }
 
   /* ---- Fin de nivel ---- */
@@ -276,9 +310,9 @@ class MainScene extends Phaser.Scene {
 
     // Manos: el objeto sigue a Jazmín, prompt [X] y tecla X (ver js/jazmin.js)
     const near = this.updateHandsCarry();
-    const donaChoco = this.hands && this.hands.id === 'chocolate' && this.nearConi();
+    const donaCalma = this.hands && (this.hands.id === 'chocolate' || this.hands.id === 'peluche') && this.nearConi();
     if (Phaser.Input.Keyboard.JustDown(this.keyX)) {
-      if (donaChoco) this.feedChocolate(); else this.handleX(near);
+      if (donaCalma) this.feedChocolate(); else this.handleX(near);
     }
 
     // Ventana: hint + Espacio (solo si no va a raquetear)
@@ -287,7 +321,7 @@ class MainScene extends Phaser.Scene {
     if (nv) this.winHint.setText(this.ventana.abierta ? '[Espacio] Cerrar ventana' : '[Espacio] Abrir ventana');
 
     if (Phaser.Input.Keyboard.JustDown(this.keySpace)) {
-      if (donaChoco) this.feedChocolate();
+      if (donaCalma) this.feedChocolate();
       else if (this.hands && this.hands.id === 'raqueta') this.swing();
       else if (nv) this.toggleVentana();
     }
@@ -297,6 +331,20 @@ class MainScene extends Phaser.Scene {
     this.updateConi(dt);
     this.threats.actualizar(dt, time || 0);
     this.refreshHUD();
+
+    // Notificaciones flotantes (una vez por nivel)
+    if (!this.fin) {
+      if (!this.notiFlags.ventana && this.ventana.abierta && this.enjambre.vivas() > 0) {
+        this.notiFlags.ventana = true; this.notify('¡Cierra la ventana! 🐝');
+      }
+      if (!this.notiFlags.coni && this.coniBar > 70) {
+        this.notiFlags.coni = true; this.notify('¡Coni está incontrolable! 🍫');
+      }
+      if (!this.notiFlags.vida && this.vida <= 30 && this.vida > 0) {
+        this.notiFlags.vida = true; this.notify('¡Jazmín necesita cuidarse! ❤');
+      }
+      this.mostrarNoti();
+    }
 
     // Fin de Nivel 1
     if (!this.fin) {

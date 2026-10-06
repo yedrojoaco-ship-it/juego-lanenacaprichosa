@@ -97,8 +97,10 @@ function solid(scene, group, x, y, w, h) {
   return z;
 }
 
-function roomLabel(scene, x, y, text) {
-  return scene.add.text(x, y, text, {
+/* Iconos de inventario compartidos (HUD + prompts) */
+const ICONS = { raqueta: '🎾', chocolate: '🍫', peluche: '🧸' };
+
+function roomLabel(scene, x, y, text) {  return scene.add.text(x, y, text, {
     fontFamily: 'Trebuchet MS', fontSize: '22px',
     color: '#ffffff', stroke: '#000000', strokeThickness: 4
   }).setOrigin(0.5).setDepth(2).setAlpha(0.9);

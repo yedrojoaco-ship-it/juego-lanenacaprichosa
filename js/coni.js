@@ -23,16 +23,17 @@ MainScene.prototype.spawnConi = function () {
 };
 
 MainScene.prototype.updateConi = function (dt) {
-  // Amenaza: la aporta el ThreatSystem (abejas hoy, fuego/agua mañana)
-  const amenaza = this.threats.nivelAmenaza() > 0 || this.ventana.abierta || GameAudio.tvOn;
-  this.coniBar = coniTick(this.coniBar, dt, { amenaza });
+  // Amenaza: la aporta el ThreatSystem (abejas hoy, fuego/agua mañana).
+  // La TV encendida con música calma (GDD: pacificador).
+  const amenaza = this.threats.nivelAmenaza() > 0 || this.ventana.abierta;
+  this.coniBar = coniTick(this.coniBar, dt, { amenaza, calma: GameAudio.tvOn });
   const bar = this.coniBar;
 
   // Velocidad según barra
   const speed = bar <= 30 ? 0 : bar <= 70 ? 95 : 175;
   if (speed === 0) {
     this.coni.setVelocity(0, 0);
-    this.coniState.setText(this.hands && this.hands.id === 'chocolate' && this.nearConi() ? '🍫' : '💤');
+    this.coniState.setText(this.hands && (this.hands.id === 'chocolate' || this.hands.id === 'peluche') && this.nearConi() ? (ICONS[this.hands.id] || '🍫') : '💤');
   } else {
     this.coniIdle -= dt;
     const arrived = this.coniTarget &&
@@ -47,6 +48,12 @@ MainScene.prototype.updateConi = function (dt) {
     if (bar > 70 && Math.random() < dt * 3) { // rastro caótico
       const s = this.add.circle(this.coni.x, this.coni.y - 20, 3, 0xffe45e, 0.9).setDepth(849);
       this.tweens.add({ targets: s, alpha: 0, y: s.y - 18, duration: 400, onComplete: () => s.destroy() });
+    }
+    if (bar > 30 && bar <= 70 && Math.random() < dt * 1.2) { // desordena: tira cosas
+      const s = this.add.rectangle(this.coni.x + Phaser.Math.Between(-14, 14), this.coni.y + 14,
+        10, 8, Phaser.Utils.Array.GetRandom([0xffffff, 0xff9ecb, 0x8ac8ef, 0xffe45e]), 0.95)
+        .setDepth(3).setAngle(Phaser.Math.Between(0, 90));
+      this.tweens.add({ targets: s, alpha: 0, delay: 4000, duration: 800, onComplete: () => s.destroy() });
     }
   }
 
@@ -69,11 +76,12 @@ MainScene.prototype.nearConi = function () {
 
 MainScene.prototype.feedChocolate = function () {
   const it = this.hands;
-  if (!it || it.id !== 'chocolate') return;
-  it.view.destroy(); // Coni se lo come
+  if (!it || (it.id !== 'chocolate' && it.id !== 'peluche')) return;
+  const calma = it.id === 'chocolate' ? 40 : 25; // GDD: chocolate -40, peluche -25
+  it.view.destroy(); // Coni se lo come / lo abraza
   this.pickups.splice(this.pickups.indexOf(it), 1);
   this.hands = null;
-  this.coniBar = calmarConi(this.coniBar); // -40 de golpe
+  this.coniBar = calmarConi(this.coniBar, calma);
   this.coniState.setText('😋');
   GameAudio.playSFX('comer');
 };

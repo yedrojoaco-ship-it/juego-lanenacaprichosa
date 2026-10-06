@@ -9,11 +9,11 @@ function clamp100(v) {
 }
 function coniTick(bar, dt, f) {
   const rise = f.amenaza ? 8 * dt : 0;
-  const fall = 2.5 * dt;
+  const fall = (f.calma ? 6 : 2.5) * dt; // TV con música infantil calma
   return clamp100(bar + rise - fall);
 }
-function calmarConi(bar) {
-  return clamp100(bar - 40);
+function calmarConi(bar, n) {
+  return clamp100(bar - (n || 40));
 }
 /* ---- Reglas de fin de Nivel 1 (puras, testeables) ---- */
 function checkDerrota(vida, coniBar) {

@@ -23,8 +23,8 @@ FASE 1 — Refactor modular (scripts clasicos, sin ES modules):
   F1-P7 ... Cierre Fase 1: game.js minimo + verificacion integral.
 
 FASES FUTURAS (detalle al arrancar cada una):
-  F2 .... Sistema de eventos reutilizable (ThreatSystem). [EN CURSO]
-  F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador).
+  F2 .... Sistema de eventos reutilizable (ThreatSystem). [COMPLETA]
+  F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador). [EN CURSO]
   F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma).
   F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones).
   F6 .... Niveles 4-5 + selector de niveles + SDK CrazyGames.
@@ -104,4 +104,13 @@ FASES FUTURAS (detalle al arrancar cada una):
   node --check 11/11, bundle sin duplicados, tests Threats/
   Coni/Nivel1 GREEN, mapa 46/7, migracion sin restos.
   FASE 2 COMPLETA: agregar Nivel 3+ es subclasear Threat.
+----------------------------------------------------------------
+[F3] 2026-10-06 — Nivel 1 fiel al GDD (TDD: test antes)
+  TV encendida calma (coniTick calma x2.4, ya no es amenaza).
+  3 chocolates frente a heladera (stock 3, antes 1 en mesa).
+  Peluche en lo de Coni (-25, fallback coni rosado, peluche.png
+  opcional). Coni desordena en 31-70 (marcas que persisten).
+  Notificaciones flotantes con cola (ventana/Coni/vida).
+  FIX: refreshHUD no existia (se perdio en un refactor) y una
+  picadura crasheaba el juego; restaurado con ICONS.
 ----------------------------------------------------------------

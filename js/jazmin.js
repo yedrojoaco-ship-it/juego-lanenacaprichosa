@@ -73,7 +73,7 @@ MainScene.prototype.updateHandsCarry = function () {
   const p = this.player;
   // Objeto en manos sigue a Jazmín
   if (this.hands) {
-    const icon = this.hands.id === 'chocolate' ? '🍫' : '🎾';
+    const icon = ICONS[this.hands.id] || '🎾';
     this.hands.view.setPosition(p.x + 14, p.y - 6).setDepth(p.y + 1);
     this.handTag.setVisible(true)
       .setPosition(p.x, p.y - 42)
