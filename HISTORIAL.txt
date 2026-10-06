@@ -23,7 +23,7 @@ FASE 1 — Refactor modular (scripts clasicos, sin ES modules):
   F1-P7 ... Cierre Fase 1: game.js minimo + verificacion integral.
 
 FASES FUTURAS (detalle al arrancar cada una):
-  F2 .... Sistema de eventos reutilizable (ThreatSystem).
+  F2 .... Sistema de eventos reutilizable (ThreatSystem). [EN CURSO]
   F3 .... Nivel 1 fiel al GDD (heladera, peluche, TV pacificador).
   F4 .... Nivel 2: Caos en la Cocina (fuego + extintor + alarma).
   F5 .... Nivel 3: Inundacion (canilla + mopa + resbalones).
@@ -87,4 +87,21 @@ FASES FUTURAS (detalle al arrancar cada una):
   opencode.json (skills.paths + permissions) y AGENTS.md
   (mapeo automatico + plugins). Desde aca: el asistente
   commitea y pushea cada avance verificado sin pedir permiso.
+----------------------------------------------------------------
+[F2-P1] 2026-10-06 — js/systems/threats.js (TDD: test antes)
+  Threat base (actualizar/amenazaParaConi/estaResuelta/
+  recibirImpacto) + ThreatSystem (registrar/actualizar/
+  nivelAmenaza/todasResueltas). Test RED→GREEN en /tmp.
+----------------------------------------------------------------
+[F2-P2] 2026-10-06 — ThreatAbejas sobre el sistema
+  js/systems/threat-abejas.js hereda Threat con la logica del
+  enjambre (spawn/IA/dano/impacto). Main delega: update via
+  threats.actualizar, swing via recibirImpacto, Coni lee
+  nivelAmenaza, victoria usa enjambre.vivas(). js/abeja.js
+  eliminado (git rm, queda en historial). Comportamiento igual.
+----------------------------------------------------------------
+[F2-P3] 2026-10-06 — Verificacion Fase 2
+  node --check 11/11, bundle sin duplicados, tests Threats/
+  Coni/Nivel1 GREEN, mapa 46/7, migracion sin restos.
+  FASE 2 COMPLETA: agregar Nivel 3+ es subclasear Threat.
 ----------------------------------------------------------------
