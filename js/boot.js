@@ -21,6 +21,8 @@ class BootScene extends Phaser.Scene {
     this.load.image('flotador', 'assets/images/flotador.png');
     this.load.image('piso_madera', 'assets/images/piso_madera.png');
     this.load.image('piso_azulejo', 'assets/images/piso_azulejo.png');
+    this.load.image('piso_pasto', 'assets/images/piso_pasto.png');
+    this.load.image('piso_ceramica', 'assets/images/piso_ceramica.png');
     this.load.on('loaderror', (f) => console.warn('[Assets] falta:', f.key, '→ fallback por código'));
   }
 

@@ -20,12 +20,14 @@ class MainScene extends Phaser.Scene {
     makeFloorPatterns(this);
     const texMadera = this.textures.exists('piso_madera') ? 'piso_madera' : 'pat-madera';
     const texAzulejo = this.textures.exists('piso_azulejo') ? 'piso_azulejo' : 'pat-azulejo';
+    const texPasto = this.textures.exists('piso_pasto') ? 'piso_pasto' : 'pat-pasto';
+    const texCeramica = this.textures.exists('piso_ceramica') ? 'piso_ceramica' : 'pat-ceramica';
     // Mansión compacta (datos en js/data-mansion.js)
     const WORLD_W = MANSION.W, WORLD_H = MANSION.H;
     this.physics.world.setBounds(0, 0, WORLD_W, WORLD_H);
 
     // Pasto exterior texturizado
-    this.add.tileSprite(WORLD_W / 2, WORLD_H / 2, WORLD_W, WORLD_H, 'pat-pasto');
+    this.add.tileSprite(WORLD_W / 2, WORLD_H / 2, WORLD_W, WORLD_H, texPasto);
 
     // Losa de la mansión (x40..920, y40..640)
     this.add.rectangle(480, 340, 900, 620, 0xd9b48f).setStrokeStyle(6, 0x7a5a3a).setDepth(-1.8);
@@ -38,7 +40,7 @@ class MainScene extends Phaser.Scene {
     for (const [x, y, w] of MANSION.puertas) puerta(this, x, y, w);
 
     // ---- Pisos texturizados con bordes ----
-    const texPorAlias = { madera: texMadera, azulejo: texAzulejo, pasto: 'pat-pasto' };
+    const texPorAlias = { madera: texMadera, azulejo: texAzulejo, pasto: texPasto };
     for (const [x, y, w, h, tex, borde] of MANSION.pisos) floorTextured(this, x, y, w, h, texPorAlias[tex], borde);
     // Alfombra ovalada cuarto de Coni (calidez cartoon)
     this.add.ellipse(460, 220, 200, 100, 0xff9ecb, 0.85).setDepth(-1)
@@ -89,7 +91,7 @@ class MainScene extends Phaser.Scene {
 
     // Patio: piscina de cerámica (borde tileado + agua + brillo)
     dropShadow(this, 480, 730, 300, 0);
-    this.add.tileSprite(480, 730, 308, 118, 'pat-ceramica').setDepth(1);
+    this.add.tileSprite(480, 730, 308, 118, texCeramica).setDepth(1);
     const pool = this.add.rectangle(480, 730, 308, 118, 0xffffff, 0)
       .setStrokeStyle(8, 0xffffff, 1).setDepth(1.4);
     this.add.rectangle(480, 730, 278, 92, 0x2fa8dd).setDepth(1.1);

@@ -30,7 +30,10 @@ function wall3D(scene, x, y, w, h, base, luzC) {
   const filo = (w >= h)
     ? scene.add.rectangle(x, y - h / 2 + 3, w - 4, 5, luzC, 1)
     : scene.add.rectangle(x - w / 2 + 3, y, 5, h - 4, luzC, 1);
-  body.setDepth(50); filo.setDepth(50.1);
+  const zocalo = (w >= h)
+    ? scene.add.rectangle(x, y + h / 2 - 2, w - 4, 4, 0x2b1c10, 0.55)
+    : scene.add.rectangle(x + w / 2 - 2, y, 4, h - 4, 0x2b1c10, 0.55);
+  body.setDepth(50); filo.setDepth(50.1); zocalo.setDepth(50.1);
   return body;
 }
 
@@ -40,7 +43,8 @@ function puerta(scene, x, y, w) {
   scene.add.rectangle(x, y, w, 18).setFillStyle(0xffffff, 0).setStrokeStyle(2, 0x6a4a2a, 0.9).setDepth(0.6);
   const j1 = scene.add.rectangle(x - w / 2 + 5, y, 11, 24, 0x6a4a2a).setStrokeStyle(1.5, 0x2b1c10, 0.6);
   const j2 = scene.add.rectangle(x + w / 2 - 5, y, 11, 24, 0x6a4a2a).setStrokeStyle(1.5, 0x2b1c10, 0.6);
-  j1.setDepth(55); j2.setDepth(55);
+  const dintel = scene.add.rectangle(x, y - 13, w + 8, 8, 0x7a5a3a).setStrokeStyle(1.5, 0x2b1c10, 0.6);
+  j1.setDepth(55); j2.setDepth(55); dintel.setDepth(55);
 }
 
 /* Patrones de piso generados (fallback visual; se tapan si hay PNG) */

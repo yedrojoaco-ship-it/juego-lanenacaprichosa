@@ -32,7 +32,8 @@ FASES FUTURAS (detalle al arrancar cada una):
   GRAFICOS (packs Kenney + full juice + fallbacks):
   G0 .... Direccion de arte + espec PNG. [COMPLETA]
   G1 .... Personajes 4-dir + sombras blandas. [COMPLETA]
-  G2 .... Tiles y muebles Kenney sin tocar colisiones. [EN CURSO]
+  G2 .... Tiles y muebles Kenney sin tocar colisiones. [COMPLETA]
+  G3 .... FX, luz y micro-animaciones. [EN CURSO]
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -160,4 +161,9 @@ FASES FUTURAS (detalle al arrancar cada una):
   estatico). Coni juega anim segun velocidad. Abejas con
   aleteo (scale pulse). softShadow (nucleo+halo) bajo pies de
   Jazmin y Coni. LEEME actualizado.
+----------------------------------------------------------------
+[G2] 2026-10-06 — Pipeline Kenney completo + remates
+  piso_pasto y piso_ceramica cableados (los 4 pisos aceptan PNG
+  o fallback). wall3D con zocalo sur, puerta() con dintel.
+  Mapa 46/7 intacto: cero cambios de colisiones.
 ----------------------------------------------------------------
