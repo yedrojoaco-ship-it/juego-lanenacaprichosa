@@ -43,7 +43,7 @@ FASES FUTURAS (detalle al arrancar cada una):
   A1 .... Sheets normalizados + escalas adaptativas. [COMPLETA]
   A2 .... SFX reales (OGG Kenney) en banco WebAudio. [COMPLETA]
   A3 .... Pisos JPG + fixes depth/jpg. [COMPLETA]
-  A4 .... UI pack (menu/HUD) + generic-items. [PENDIENTE]
+  A4 .... UI pack (menu/HUD) + generic-items. [COMPLETA]
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -220,4 +220,11 @@ FASES FUTURAS (detalle al arrancar cada una):
   El tileTexture interno de Phaser duplica la fuente en canvas
   y con JPGs 1408px sale verde. Fotos por image+cover,
   patrones chicos siguen por tileSprite. Pisos .png→.jpg reales.
+----------------------------------------------------------------
+[A4] 2026-10-06 — UI Kenney + generic-items (TV + juguetes)
+  Menu con botones PNG Blue + fuente Kenney Future (@font-face,
+  layout 5 niveles). TV del living = monitor Kenney 052 con
+  pantalla on/off encima. Juguetes N4 = joysticks/gamepads
+  079-082 con fallback magenta. Verificado en navegador
+  (menu, N1 con parquet, N4 amenaza→derrota OK).
 ----------------------------------------------------------------

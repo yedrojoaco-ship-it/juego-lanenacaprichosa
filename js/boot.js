@@ -19,10 +19,16 @@ class BootScene extends Phaser.Scene {
     this.load.image('extintor', 'assets/images/extintor.png');
     this.load.image('mopa', 'assets/images/mopa.png');
     this.load.image('flotador', 'assets/images/flotador.png');
+    this.load.image('tv', 'assets/images/tv.png');
+    this.load.image('jug1', 'assets/images/jug1.png');
+    this.load.image('jug2', 'assets/images/jug2.png');
+    this.load.image('jug3', 'assets/images/jug3.png');
+    this.load.image('jug4', 'assets/images/jug4.png');
     this.load.image('piso_madera', 'assets/images/piso_madera.jpg');
     this.load.image('piso_azulejo', 'assets/images/piso_azulejo.jpg');
     this.load.image('piso_pasto', 'assets/images/piso_pasto.jpg');
     this.load.image('piso_ceramica', 'assets/images/piso_ceramica.jpg');
+    this.load.image('ui-btn', 'assets/ui/btn_blue.png');
     // SFX (Kenney interface-sounds, ver assets/sfx/LEEME.txt)
     for (const k of ['agarre', 'soltar', 'comer', 'raquetazo', 'ventana', 'puerta',
       'dano', 'abeja_muerta', 'victoria', 'derrota', 'agua', 'resbalon', 'pila']) {

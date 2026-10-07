@@ -82,9 +82,14 @@ class MainScene extends Phaser.Scene {
     planta(352, 394); planta(658, 616);
     // TV (objeto especial, guardamos referencia)
     const TV = MANSION.tv;
-    box25D(this, TV.x, TV.y, 110, 30, 0x222233, 0x44445e);
+    if (this.textures.exists('tv')) {
+      this.add.image(TV.x, TV.y - 50, 'tv').setDisplaySize(100, 118).setDepth(405); // monitor Kenney
+      this.tvScreen = this.add.rectangle(TV.x, TV.y - 64, 68, 58, 0x111111).setDepth(410);
+    } else {
+      box25D(this, TV.x, TV.y, 110, 30, 0x222233, 0x44445e);
+      this.tvScreen = this.add.rectangle(TV.x, TV.y - 12, 88, 24, 0x111111).setDepth(410);
+    }
     solid(this, W, TV.x, TV.y, 110, 34);
-    this.tvScreen = this.add.rectangle(TV.x, TV.y - 12, 88, 24, 0x111111).setDepth(410);
     this.tvLight = this.add.circle(TV.x, TV.y, 70, 0x66ccff, 0).setDepth(409);
     this.tvZone = this.add.zone(...TV.zone, 200, 140);
     this.physics.add.existing(this.tvZone);

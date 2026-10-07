@@ -12,8 +12,7 @@ REGLAS (no negociables):
 3. Personajes vistos 3/4 desde arriba (cabeza grande, pies chicos).
 4. Tiles de piso en grilla 64x64 repetible (tileable).
 
-PERSONAJES (spritesheet 128x192 = grilla 4x4 de 32x48):
-- jazmin.png  → fila 0 (frames 0-3): caminar ABAJO · fila 1 (4-7):
+PERSONAJES (spritesheet 128x192 = grilla 4x4 de 32x48):- jazmin.png  → fila 0 (frames 0-3): caminar ABAJO · fila 1 (4-7):
   IZQUIERDA · fila 2 (8-11): DERECHA · fila 3 (12-15): ARRIBA.
   Pelo castaño, vestido rosa, 4 frames por dirección.
 - coni.png      → spritesheet 128x168 (grilla 4x4 de 30x42, mismo
@@ -24,6 +23,8 @@ OBJETOS (imagen simple, centrados):
 - abeja.png     → 20x16 (2 frames opcionales mismo archivo lado a lado).
 - extintor.png  → 32x44 rojo.  mopa.png → 28x40.  flotador.png → 30x30.
 - peluche.png   → 30x30 osito (si falta: fallback coni rosado).
+- tv.png        → monitor Kenney genericItem 052 (114x134).
+- jug1..jug4.png → joysticks/gamepads Kenney (079-082) del Nivel 4.
 
 PISOS (JPG fotográficos 1408x768, se muestran enteros por ambiente):
 - piso_madera.jpg   → parquet cálido (habs + living + pasillo).
