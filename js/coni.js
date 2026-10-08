@@ -37,8 +37,8 @@ MainScene.prototype.updateConi = function (dt) {
   this.coniBar = coniTick(this.coniBar, dt, { amenaza, calma: GameAudio.tvOn });
   const bar = this.coniBar;
 
-  // Velocidad según barra
-  const speed = bar <= 30 ? 0 : bar <= 70 ? 95 : 175;
+  // Velocidad según barra (× dificultad del nivel)
+  const speed = bar <= 30 ? 0 : Math.round((bar <= 70 ? 95 : 175) * (this.dif || 1));
   if (speed === 0) {
     this.coni.setVelocity(0, 0);
     this.coniState.setText(this.hands && (this.hands.id === 'chocolate' || this.hands.id === 'peluche') && this.nearConi() ? (ICONS[this.hands.id] || '🍫') : '💤');

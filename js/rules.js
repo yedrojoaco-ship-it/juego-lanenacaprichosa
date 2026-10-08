@@ -17,13 +17,14 @@ function calmarConi(bar, n) {
 }
 /* ---- Fuego Nivel 2: intensidad 0-100, extintor resta 34 por uso ---- */
 function fuegoTick(v, dt, f) {
-  const rise = 5 * dt;
+  const rise = 5 * (f.mult || 1) * dt;
   const baja = f.uso ? 34 : 0;
   return clamp100(v + rise - baja);
 }
 /* ---- Agua Nivel 3: sube con canilla abierta, baja al cerrarla ---- */
 function aguaTick(v, dt, f) {
-  return clamp100(v + (f.abierta ? 4 * dt : -2 * dt));
+  const mult = f.mult || 1;
+  return clamp100(v + (f.abierta ? 4 * mult * dt : -2 * dt));
 }
 /* ---- Reglas de fin de nivel (puras, testeables) ----
  * La victoria es genérica: amenazas resueltas + Coni calma.

@@ -67,9 +67,44 @@ class AudioManager {
   sfx(id) {
     try { const s = this.bank[id]; if (s) s.play(); } catch (e) { /* noop */ }
   }
-  playPaso() {}      // sin equivalente en el pack (stub)
-  playRaquetazo() { this.sfx('raquetazo'); }
-  playGrito() {}     // sin equivalente en el pack (stub)
+  // ---- Sintetizador WebAudio para SFX sin archivo (paso/grito/extintor/alarma) ----
+  ctx() {
+    try {
+      if (!this._ctx) this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (this._ctx.state === 'suspended') this._ctx.resume();
+      return this._ctx;
+    } catch (e) { return null; }
+  }
+  ruido(dur, filtroFreq, tipo) {
+    const ctx = this.ctx();
+    if (!ctx) return;
+    const n = Math.floor(ctx.sampleRate * dur);
+    const buf = ctx.createBuffer(1, n, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const f = ctx.createBiquadFilter();
+    f.type = tipo || 'lowpass'; f.frequency.value = filtroFreq || 800;
+    src.connect(f); f.connect(ctx.destination);
+    src.start();
+  }
+  tono(f0, f1, dur, tipo) {
+    const ctx = this.ctx();
+    if (!ctx) return;
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = tipo || 'square';
+    o.frequency.setValueAtTime(f0, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(Math.max(f1, 1), ctx.currentTime + dur);
+    g.gain.setValueAtTime(0.18, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur);
+  }
+  playPaso() { this.ruido(0.07, 500); }                    // pisada sorda
+  playGrito() { this.tono(620, 180, 0.28); }               // grito cartoon
+  playExtintor() { this.ruido(0.6, 4000, 'highpass'); }    // spray
+  playAlarma() { this.tono(660, 660, 0.22); this.tono(880, 880, 0.22); } // sirena x1 (se repite por evento)
   playPuerta() { this.sfx('puerta'); }
   playVentana() { this.sfx('ventana'); }
   playDano() { this.sfx('dano'); }
@@ -79,8 +114,6 @@ class AudioManager {
   playComer() { this.sfx('comer'); }
   playVictoria() { this.sfx('victoria'); }
   playDerrota() { this.sfx('derrota'); }
-  playExtintor() {}  // sin equivalente en el pack (stub)
-  playAlarma() {}    // sin equivalente en el pack (stub)
   playAgua() { this.sfx('agua'); }
   playResbalon() { this.sfx('resbalon'); }
   playPila() { this.sfx('pila'); }

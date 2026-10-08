@@ -48,7 +48,7 @@ class BootScene extends Phaser.Scene {
       'dano', 'abeja_muerta', 'victoria', 'derrota', 'agua', 'resbalon', 'pila']) {
       try { if (this.cache.audio.exists('sfx-' + k)) GameAudio.bank[k] = this.sound.add('sfx-' + k); } catch (e) { /* noop */ }
     }
-    this.scene.start('Menu');
+    this.scene.start('Intro');
   }
 
   /* Fallbacks cartoon detallados (bordes, luces y sombras). Solo los que falten. */

@@ -44,6 +44,10 @@ FASES FUTURAS (detalle al arrancar cada una):
   A2 .... SFX reales (OGG Kenney) en banco WebAudio. [COMPLETA]
   A3 .... Pisos JPG + fixes depth/jpg. [COMPLETA]
   A4 .... UI pack (menu/HUD) + generic-items. [COMPLETA]
+
+  CIERRE (6 pasos finales):
+  Z1 .... Audio 17/17 SFX + intro bici + bloqueo niveles. [COMPLETA]
+  Z2 .... Electron + PUBLICAR.md + pausa + dificultad + README. [COMPLETA]
   G2 .... Tiles y muebles Kenney sin tocar colisiones.
   G3 .... FX, luz y micro-animaciones.
   G4 .... UI/HUD/menu polish.
@@ -227,4 +231,15 @@ FASES FUTURAS (detalle al arrancar cada una):
   pantalla on/off encima. Juguetes N4 = joysticks/gamepads
   079-082 con fallback magenta. Verificado en navegador
   (menu, N1 con parquet, N4 amenaza→derrota OK).
+----------------------------------------------------------------
+[Z1] 2026-10-06 — Audio completo + intro + bloqueo niveles
+  SFX 17/17 (13 OGG Kenney + 4 sintetizados WebAudio).
+  IntroScene bici en 3 viñetas (click/Espacio, S salta).
+  Menu bloquea niveles con candado según SDK.maxNivel.
+----------------------------------------------------------------
+[Z2] 2026-10-06 — Electron + pausa + dificultad + README
+  package.json + electron-main.js + PUBLICAR.md (sin instalar).
+  Pausa con P, dificultad +12%/nivel (Coni, fuego, agua).
+  README con capturas docs/img/ y créditos CC0. N2 verificado
+  en navegador (olla + humo + TV Kenney + azulejos).
 ----------------------------------------------------------------

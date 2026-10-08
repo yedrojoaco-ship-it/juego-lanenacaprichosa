@@ -29,13 +29,16 @@ class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     const mkBtn = (dy, label, nivel) => {
+      const abierto = nivel <= SDK.maxNivel;
       const b = this.add.image(width / 2, height / 2 + dy, 'ui-btn').setDisplaySize(230, 62).setInteractive({ useHandCursor: true });
-      this.add.text(width / 2, height / 2 + dy, label, {
+      if (!abierto) b.setTint(0x555566);
+      this.add.text(width / 2, height / 2 + dy, (abierto ? label : '🔒  NIVEL ' + nivel), {
         fontFamily: '"Kenney Future", "Trebuchet MS"', fontSize: '19px', color: '#ffffff', fontStyle: 'bold'
       }).setOrigin(0.5);
-      b.on('pointerover', () => b.setTint(0xddccff));
-      b.on('pointerout', () => b.clearTint());
+      b.on('pointerover', () => { if (abierto) b.setTint(0xddccff); });
+      b.on('pointerout', () => { b.clearTint(); if (!abierto) b.setTint(0x555566); });
       b.on('pointerdown', () => {
+        if (!abierto) { GameAudio.playSFX('dano'); return; }
         this.cameras.main.fadeOut(250);
         this.time.delayedCall(260, () => this.scene.start('Main', { nivel }));
       });

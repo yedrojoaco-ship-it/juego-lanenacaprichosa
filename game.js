@@ -165,6 +165,7 @@ class MainScene extends Phaser.Scene {
 
     // Amenazas según nivel (Fase 2+: ThreatSystem extensible)
     this.threats = new ThreatSystem(this);
+    this.dif = 1 + 0.12 * (this.nivel - 1); // dificultad: +12% por nivel
     this.enjambre = null;
     this.fuego = null;
     this.agua = null;
@@ -189,6 +190,12 @@ class MainScene extends Phaser.Scene {
     this.keyB = this.input.keyboard.addKey('B');
     this.keyX = this.input.keyboard.addKey('X');
     this.keySpace = this.input.keyboard.addKey('SPACE');
+    this.keyP = this.input.keyboard.addKey('P');
+    this.pausa = false;
+    this.pausaTxt = this.add.text(480, 300, '⏸ PAUSA (P para seguir)', {
+      fontFamily: '"Kenney Future", "Trebuchet MS"', fontSize: '36px', color: '#ffe45e',
+      stroke: '#000', strokeThickness: 6, backgroundColor: '#000000aa', padding: { x: 16, y: 10 }
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(990).setVisible(false);
     this.winHint = this.add.text(MANSION.ventana.x, MANSION.ventana.y + 72, '[Espacio] Abrir/Cerrar ventana', {
       fontFamily: 'Trebuchet MS', fontSize: '14px',
       backgroundColor: '#000000aa', color: '#9be8ff', padding: { x: 8, y: 4 }
@@ -331,6 +338,13 @@ class MainScene extends Phaser.Scene {
 
   update(time, delta) {
     if (this.fin) return; // overlay de fin: todo pausado salvo UI
+    if (Phaser.Input.Keyboard.JustDown(this.keyP)) {
+      this.pausa = !this.pausa;
+      this.pausaTxt.setVisible(this.pausa);
+      this.player.setVelocity(0, 0);
+      this.coni.setVelocity(0, 0);
+    }
+    if (this.pausa) return;
     const p = this.player;
     let vx = 0, vy = 0;
     if (this.cursors.left.isDown) vx = -1;
@@ -427,7 +441,7 @@ const config = {
   backgroundColor: '#160b2e',
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   physics: { default: 'arcade', arcade: { gravity: { x: 0, y: 0 }, debug: false } },
-  scene: [BootScene, MenuScene, MainScene]
+  scene: [BootScene, IntroScene, MenuScene, MainScene]
 };
 
 window.__game = new Phaser.Game(config); // handle debug (consola: __game)
