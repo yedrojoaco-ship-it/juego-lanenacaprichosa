@@ -243,3 +243,14 @@ FASES FUTURAS (detalle al arrancar cada una):
   README con capturas docs/img/ y créditos CC0. N2 verificado
   en navegador (olla + humo + TV Kenney + azulejos).
 ----------------------------------------------------------------
+[FIX-dif] 2026-10-14 — Dificultad aplicada en fuego y agua
+  ThreatFuego/ThreatAgua pasan mult: scene.dif a fuegoTick/
+  aguaTick (rules.js ya lo soportaba). N1 igual, N5 +48%.
+----------------------------------------------------------------
+[TOOLS-2] 2026-10-14 — Fallback automático de modelos gratis
+  Plugin @smart-coders-hq/opencode-model-fallback en
+  opencode.json + .opencode/model-fallback.json (scope proyecto).
+  Cadena: laguna-s-2.1 → north-mini-code → inkling (:free).
+  Rota solo ante 429/quota/5xx/timeout, con cooldown y vuelta
+  al primario. Requiere reiniciar OpenCode para activar.
+----------------------------------------------------------------

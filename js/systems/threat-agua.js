@@ -63,7 +63,7 @@ class ThreatAgua extends Threat {
 
   actualizar(dt, now) {
     const scene = this.scene;
-    this.nivel = aguaTick(this.nivel, dt, { abierta: this.canilla });
+    this.nivel = aguaTick(this.nivel, dt, { abierta: this.canilla, mult: this.scene.dif });
     // Charcos nuevos si hay agua corriendo
     if (this.canilla && this.nivel > 30 && this.charcos.length < 6) {
       this.acc += dt;

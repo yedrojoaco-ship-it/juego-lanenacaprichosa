@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": ["@smart-coders-hq/opencode-model-fallback"],
   "skills": { "paths": [".opencode/skills"] },
   "permission": {
     "skill": "allow",

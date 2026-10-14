@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "defaults": {
+    "fallbackOn": ["rate_limit", "quota_exceeded", "5xx", "timeout", "overloaded"],
+    "cooldownMs": 300000,
+    "retryOriginalAfterMs": 900000,
+    "maxFallbackDepth": 3
+  },
+  "agents": {
+    "*": {
+      "fallbackModels": [
+        "openrouter/poolside/laguna-s-2.1:free",
+        "openrouter/cohere/north-mini-code:free",
+        "openrouter/thinkingmachines/inkling:free"
+      ]
+    }
+  },
+  "logging": true,
+  "logLevel": "info"
+}

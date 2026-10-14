@@ -64,7 +64,7 @@ class ThreatFuego extends Threat {
   }
 
   actualizar(dt, now) {
-    if (this.intensidad > 0) this.intensidad = fuegoTick(this.intensidad, dt, {});
+    if (this.intensidad > 0) this.intensidad = fuegoTick(this.intensidad, dt, { mult: this.scene.dif });
     // Quemadura si Jazmín toca la olla con fuego fuerte
     const p = this.scene.player;
     if (this.intensidad > 50 && now > this.scene.danoCD &&
